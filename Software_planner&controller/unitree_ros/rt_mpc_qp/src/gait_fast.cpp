@@ -597,15 +597,6 @@ int main(int argc, char *argv[])
                   }
                   foortheta_gen = rpympc.XGetSolution_Foot_rotation(count_in_rt_mpc_foot, dt_mpc_fast);
                   
-
-                  // if (rpympc._pvFlag_kmp >0)
-                  // {
-                  //   foorpr_kmp = rpympc.XGetSolution_Foot_position_KMP(count_in_rt_mpc_foot,dt_mpc_fast);
-                  // }
-                  // else
-                  // {
-                  //   foorpr_kmp = rpympc.XGetSolution_Foot_position_KMP_faster(count_in_rt_mpc_foot,dt_mpc_fast);
-                  // }
                 }
                 
                 if ((int) low_mpc_gait(27,0) % 2 == 0)           //odd:left support

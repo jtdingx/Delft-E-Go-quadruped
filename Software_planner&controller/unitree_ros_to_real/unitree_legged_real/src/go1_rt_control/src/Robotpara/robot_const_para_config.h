@@ -1,9 +1,3 @@
-/*************************************************************
- * Copyright: Walker Team, UBTech
- * Auther: chunyu.chen
- * Build Date: 31/07/2018
- * Modify Date:
- *************************************************************/
 
 #ifndef ROBOT_CONST_PARA_CONFIG_H
 #define ROBOT_CONST_PARA_CONFIG_H

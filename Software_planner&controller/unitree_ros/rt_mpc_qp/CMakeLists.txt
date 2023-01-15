@@ -29,20 +29,10 @@ SET(SUB_SRC  src)
 SET(SRC_PATH  ${PROJECT_SOURCE_DIR}/${SUB_SRC})
 
 
-find_package(Armadillo 4.0 REQUIRED)
-include_directories(${ARMADILLO_INCLUDE_DIRS})
-
-#################################
-#      Set Libraries
-#################################
-set(armaLIBRARIES armadillo)
-
-
 set(QP_DIRS /home/jiatao/unitree_ros_simu_cvx/src/unitree_ros/go1_rt_control/src/QP)
 set(FASTMPC_DIRS ${SRC_PATH}/FastMPC)
 set(Utils_DIRS /home/jiatao/unitree_ros_simu_cvx/src/unitree_ros/go1_rt_control/src/utils)
 set(Robopara_DIRS /home/jiatao/unitree_ros_simu_cvx/src/unitree_ros/go1_rt_control/src/Robotpara)
-set(KMP_DIRS ${SRC_PATH}/KMP)
 
 
 INCLUDE_DIRECTORIES(
@@ -57,7 +47,6 @@ FILE(GLOB SOURCES
 	${QP_DIRS}/*.cpp
 	${FASTMPC_DIRS}/*.cpp
 	${Robopara_DIRS}/*.cpp
-	${KMP_DIRS}/*.cpp
 )
 
 

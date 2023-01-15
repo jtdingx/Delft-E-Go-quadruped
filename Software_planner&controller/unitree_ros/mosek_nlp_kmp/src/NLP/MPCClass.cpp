@@ -78,10 +78,10 @@ void MPCClass::FootStepInputs( double stepwidth, double steplength, double steph
 	_steplength.setConstant(steplength);
 	_steplength(0) = 0;
 
-	// for(int i=15; i<_footstepsnumber;i++)
-	// {
-  //      _steplength(i) *= (-1);
-	// }
+	for(int i=15; i<_footstepsnumber;i++)
+	{
+       _steplength(i) *= (-1);
+	}
 
   _steplength(_footstepsnumber-4) = 0;  
   _steplength(_footstepsnumber-3) = 0;  
@@ -98,10 +98,10 @@ void MPCClass::FootStepInputs( double stepwidth, double steplength, double steph
   _stepwidth(_footstepsnumber-2) = 0;
   _stepwidth(_footstepsnumber-1) = 0;
 
-	// for(int i=15; i<_footstepsnumber;i++)
-	// {
-  //      _stepwidth(i) *= (-1);
-	// }
+	for(int i=15; i<_footstepsnumber;i++)
+	{
+       _stepwidth(i) *= (-1);
+	}
 
 	
 	_stepheight.setConstant(stepheight);
@@ -457,11 +457,11 @@ void MPCClass::Re_Initialize(double step_length_ref, double step_width_ref)
 
 	_steplength.setConstant(step_length_ref);
 	_steplength(0) = 0;
-	// for(int i=15; i<_footstepsnumber;i++)
-	// {
-  //      _steplength(i) *= (-1);
-	// }
-  // _steplength(15) = 0;
+	for(int i=15; i<_footstepsnumber;i++)
+	{
+       _steplength(i) *= (-1);
+	}
+  _steplength(15) = 0;
   _steplength(_footstepsnumber-4) = 0;    
   _steplength(_footstepsnumber-3) = 0;  
   _steplength(_footstepsnumber-2) = 0;
@@ -476,11 +476,11 @@ void MPCClass::Re_Initialize(double step_length_ref, double step_width_ref)
   {
     _stepwidth(0) = 0;
   }
-	// for(int i=15; i<_footstepsnumber;i++)
-	// {
-  //   _stepwidth(i) *= (-1);
-	// }
-  // _stepwidth(15) = 0;
+	for(int i=15; i<_footstepsnumber;i++)
+	{
+    _stepwidth(i) *= (-1);
+	}
+  _stepwidth(15) = 0;
   _stepwidth(_footstepsnumber-4) = 0;    
   _stepwidth(_footstepsnumber-3) = 0; 
   _stepwidth(_footstepsnumber-2) = 0;

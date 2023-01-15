@@ -359,23 +359,23 @@ test_stepping_in_place: 0 ####step_in_place and stepping forward
 ##########################===============//////////////////////////////
 ##### gait parameters
 dt_slow_mpc: 0.025
-step_length: 0.00
+step_length: 0.05
 step_width: 0
 step_height: 0
-foot_clear_height: 0.06
+foot_clear_height: 0.05
 t_period: 0.25 ###step period
 total_mass: 13
 using_hie_using: 0 ###using the rt_mpc data
 
 ### first layer
 _aax:  10000000
-_aay:  5000000
+_aay:  1000000
 _aaxv: 5000          
 _aayv: 1000
-_bbx:  400000000      
-_bby:  400000000
-_rr1:  200000000      
-_rr2:  200000000 
+_bbx:  500000000       
+_bby:  500000000
+_rr1:  500000000      
+_rr2:  500000000 
 _aax1: 100            
 _aay1: 100
 _bbx1: 1000            
@@ -384,17 +384,17 @@ _rr11: 10000
 _rr21: 10000
 
 ### feedback
-_lamda_comx: 0.7
-_lamda_comvx: 0.9
+_lamda_comx: 0.9
+_lamda_comvx: 0.95
 _lamda_comy: 0.95
-_lamda_comvy: 0.95
+_lamda_comvy: 0.99
 
 ### second layer
-_Rthetax: 100                          
-_Rthetay: 100       
-_alphathetax: 100                    
-_alphathetay: 100       
-_beltathetax: 100000000                
-_beltathetay: 100000000 
+_Rthetax: 1                          
+_Rthetay: 1       
+_alphathetax: 10                    
+_alphathetay: 10       
+_beltathetax: 5000000                
+_beltathetay: 5000000 
 _gama_zmpx: 1000                     
 _gama_zmpy: 1000 

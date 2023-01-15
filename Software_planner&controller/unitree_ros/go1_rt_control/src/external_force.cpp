@@ -94,9 +94,9 @@ void teleForceCmd::keyLoop()
         switch(c){
         case KEYCODE_UP:
             if(mode > 0) {
-                Fx = 100;
+                Fx = 60;
             } else {
-                Fx += 20;
+                Fx += 16;
                 if(Fx > 220) Fx = 220;
                 if(Fx < -220) Fx = -220;
             }
@@ -105,9 +105,9 @@ void teleForceCmd::keyLoop()
             break;
         case KEYCODE_DOWN:
             if(mode > 0) {
-                Fx = -100;
+                Fx = -60;
             } else {
-                Fx -= 20;
+                Fx -= 16;
                 if(Fx > 220) Fx = 220;
                 if(Fx < -220) Fx = -220;
             }
@@ -116,9 +116,9 @@ void teleForceCmd::keyLoop()
             break;
         case KEYCODE_LEFT:
             if(mode > 0) {
-                Fy = 80;
+                Fy = 30;
             } else {
-                Fy += 10;
+                Fy += 8;
                 if(Fy > 220) Fy = 220;
                 if(Fy < -220) Fy = -220;
             }
@@ -127,9 +127,9 @@ void teleForceCmd::keyLoop()
             break;
         case KEYCODE_RIGHT:
             if(mode > 0) {
-                Fy = -80;
+                Fy = -30;
             } else {
-                Fy -= 10;
+                Fy -= 8;
                 if(Fy > 220) Fy = 220;
                 if(Fy < -220) Fy = -220;
             }

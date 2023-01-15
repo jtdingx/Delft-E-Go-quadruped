@@ -37,21 +37,10 @@ FIND_PACKAGE ( Threads REQUIRED )
 SET(SUB_SRC_NLP  src/mosek_nlp_kmp/src)
 SET(SRC_PATH_NLP  ${PROJECT_SOURCE_DIR}/${SUB_SRC_NLP})
 
-SET(SUB_SRC_GRF  src/Whole_body_dynamic/src)
-SET(SRC_PATH_GRF  ${PROJECT_SOURCE_DIR}/${SUB_SRC_GRF})
 
-set(YAML_INC_DIR /home/jiatao/Documents/unitree_sdk_hardware_test/go1_remote_control/src/unitree_ros_to_real/unitree_legged_real/include)
-set(YAML_LIB_DIR /home/jiatao/Documents/unitree_sdk_hardware_test/go1_remote_control/src/unitree_ros_to_real/unitree_legged_real/lib)
+set(YAML_INC_DIR unitree_ros_to_real/unitree_legged_real/include)
+set(YAML_LIB_DIR unitree_ros_to_real/unitree_legged_real/lib)
  
-#include_directories(${INC_DIR})
-
-
-
-# # ### laptop2:mosek 9.0.86: 2019 may: require lower ld: for linux 2014 (walker and laptop)
-# INCLUDE_DIRECTORIES("~/Documents/mosektoolslinuxaarch64/mosek/9.3/tools/platform/linuxaarch64/h")
-# INCLUDE_DIRECTORIES("~/Documents/mosektoolslinuxaarch64/mosek/9.3/tools/platform/linuxaarch64/include")
-# INCLUDE_DIRECTORIES("~/Documents/mosektoolslinuxaarch64/mosek/9.3/tools/platform/linuxaarch64/bin")
-# LINK_DIRECTORIES(~/Documents/mosektoolslinuxaarch64/mosek/9.3/tools/platform/linuxaarch64/bin)
 
 include_directories(
     include
@@ -60,8 +49,6 @@ include_directories(
     # ${GAZEBO_INCLUDE_DIRS}
     ${SRC_PATH}
     ${SRC_PATH_NLP}
-    ${SRC_PATH_GRF}
-    # ${YAML_INC_DIR}
     /usr/local/include
 )
 
@@ -119,30 +106,11 @@ add_dependencies(go1_servo_control ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_
 ########################## for nlp_mosek generation################
 set(RTControl_DIRS ${SRC_PATH_NLP}/NLPRTControl)
 set(NLP_DIRS ${SRC_PATH_NLP}/NLP)
-set(KMP_DIRS ${SRC_PATH_NLP}/KMP)
-# set(Robopara_DIRS ${SRC_PATH_NLP}/Robotpara)
-# set(Qp_DIRS ${SRC_PATH_NLP}/QP)
-# set(EigenQp_DIRS ${SRC_PATH_NLP}/utils/EiQuadProg)
-
-#find_package(Armadillo 4.0 REQUIRED)
-#include_directories(${ARMADILLO_INCLUDE_DIRS})
-
-#################################
-#      Set Libraries
-#################################
-#set(armaLIBRARIES armadillo)
-
-
-
-# link_libraries(libfusion64.a)
-# link_libraries(libmosek64.so)
-# link_libraries(libfusion64.so)
 
 
 FILE(GLOB SOURCES
 	${RTControl_DIRS}/*.cpp
 	${NLP_DIRS}/*.cpp
-    # ${KMP_DIRS}/*.cpp
 	${SRC_PATH}/Robotpara/robot_const_para_config.cpp
     ${SRC_PATH}/QP/QPBaseClass.cpp
     ${SRC_PATH}/utils/EiQuadProg/EiQuadProg.cpp
@@ -162,37 +130,3 @@ add_dependencies(mosek_nlp_kmp_node
    ${catkin_LIBRARIES}
    yaml-cpp
  )
-
-
-########################## for grf generation ################
-set(Filter_DIRSX ${SRC_PATH_GRF}/Filter)
-# set(Qp_DIRSX ${SRC_PATH_GRF}/QP)
-set(Robopara_DIRSX ${SRC_PATH_GRF}/Robotpara)
-set(GRF_DIRSX ${SRC_PATH_GRF}/whole_body_dynamics)
-# set(EigenQp_DIRSX ${SRC_PATH_GRF}/utils/EiQuadProg)
-
-
-
-FILE(GLOB SOURCESX
-	${Filter_DIRSX}/*.cpp
-	# ${Qp_DIRSX}/*.cpp
-	${SRC_PATH}/Robotpara/robot_const_para_config.cpp
-    ${GRF_DIRSX}/*.cpp
-    ${SRC_PATH}/QP/QPBaseClass.cpp
-    ${SRC_PATH}/utils/EiQuadProg/EiQuadProg.cpp
-)
-add_executable(grf_node ${SRC_PATH_GRF}/gait_dynamic.cpp
-                ${SOURCESX}
-                )
-
-add_dependencies(grf_node
-        ${${PROJECT_NAME}_EXPORTED_TARGETS}
-        ${catkin_EXPORTED_TARGETS}
-)
-
-
-target_link_libraries(grf_node
-    ${${PROJECT_NAME}_EXPORTED_TARGETS}
-    ${catkin_LIBRARIES}
-    yaml-cpp
-)

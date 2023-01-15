@@ -1,6 +1,6 @@
 /*************************************************************
- * Copyright: Walker Team, UBTech
- * Auther: chunyu.chen
+ * Provided by
+ * chunyu.chen
  * Build Date: 01/08/2018
  * Modify Date:
  *************************************************************/

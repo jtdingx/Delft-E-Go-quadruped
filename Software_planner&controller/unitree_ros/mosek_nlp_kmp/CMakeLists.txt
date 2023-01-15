@@ -53,18 +53,6 @@ set(Robopara_DIRS /home/jiatao/unitree_ros_simu_cvx/src/unitree_ros/go1_rt_contr
 set(QP_DIRS /home/jiatao/unitree_ros_simu_cvx/src/unitree_ros/go1_rt_control/src/QP)
 set(Eigen_qp_DIRS /home/jiatao/unitree_ros_simu_cvx/src/unitree_ros/go1_rt_control/src/utils/EiQuadProg)
 
-# # ### laptop2:mosek 9.0.86: 2019 may: require lower ld: for linux 2014 (walker and laptop)
-# INCLUDE_DIRECTORIES("/home/jiatao/Documents/mosek/9.3/tools/platform/linux64x86/h")
-# INCLUDE_DIRECTORIES("/home/jiatao/Documents/mosek/9.3/tools/platform/linux64x86/include")
-# INCLUDE_DIRECTORIES("/home/jiatao/Documents/mosek/mosek/9.3/tools/platform/linux64x86/bin")
-# LINK_DIRECTORIES(/home/jiatao/Documents/mosek/9.3/tools/platform/linux64x86/bin)
-
-### laptop2:mosek 9.0.86: 2019 may: for walker_hardware
-# INCLUDE_DIRECTORIES("/home/walker2/mosek_source/mosek/9.0/tools/platform/linux64x86/h")
-# INCLUDE_DIRECTORIES("/home/walker2/mosek_source/mosek/9.0/tools/platform/linux64x86/include")
-# INCLUDE_DIRECTORIES("/home/walker2/mosek_source/mosek/9.0/tools/platform/linux64x86/bin")
-# LINK_DIRECTORIES(/home/walker2/mosek_source/mosek/9.0/tools/platform/linux64x86/bin)
-
 
 INCLUDE_DIRECTORIES(
 	${SRC_PATH}
@@ -77,10 +65,7 @@ INCLUDE_DIRECTORIES(
 
 FILE(GLOB SOURCES
 	${RTControl_DIRS}/*.cpp
-	# ${NLP_DIRS}/NLPClass.cpp
-  # ${NLP_DIRS}/NLPClass_sqp.cpp
   ${NLP_DIRS}/MPCClass.cpp
-  # ${KMP_DIRS}/*.cpp
 	${Robopara_DIRS}/*.cpp
   ${QP_DIRS}/*.cpp
   ${Eigen_qp_DIRS}/*.cpp

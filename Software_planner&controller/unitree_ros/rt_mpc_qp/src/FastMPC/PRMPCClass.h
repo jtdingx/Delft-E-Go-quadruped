@@ -16,14 +16,9 @@ Description:	Header file of PRMPCClass
 #include <vector> 
 #include "/home/jiatao/unitree_ros_simu_cvx/src/unitree_ros/go1_rt_control/src/Robotpara/robot_const_para_config.h"
 
-#include "KMP/kmp.h"
-#include <armadillo>
-
-
 
 using namespace Eigen;
 using namespace std;
-using namespace arma;
 
 
 /// constant variable defintion
@@ -42,18 +37,11 @@ class PRMPCClass : public QPBaseClass
 
 	
 		/******************* KMP class preparation **************/
-		kmp kmp_leg_L;
-		kmp kmp_leg_R;
+
 
 		int    _inDim_kmp; 	      		    //input dimension
 		int    _outDim_kmp; 	      		    //output dimension
 		int    _pvFlag_kmp;			    // output: pos (and vel)
-		///////////// adjust KMP parameters
-		double _lamda_kmp, _kh_kmp;	    	    //set kmp parameters 
-		vec    _query_kmp;            	    // input
-		vec    _mean_kmp;  	            // output:mean
-		mat    _data_kmp;
-			  
 		
 		void config_set();		
 		//// robot parameters
@@ -119,10 +107,7 @@ class PRMPCClass : public QPBaseClass
 		Eigen::Matrix<double, 3, 5> _Lfoot_r, _Rfoot_r,_Lfoot_rv, _Rfoot_rv,_Lfoot_ra, _Rfoot_ra;
 		double _footx_max, _footx_min,_footy_max, _footy_min;		
 		
-		Eigen::Matrix<double,6,1> XGetSolution_Foot_position_KMP(int walktime, double dt_sample);
-		Eigen::Matrix<double,6,1> XGetSolution_Foot_position_KMP_faster(int walktime, double dt_sample);		
-			
-		  
+
 		/////%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		//// for kMP swing generation: private variable for leg status storage	
 		/////%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

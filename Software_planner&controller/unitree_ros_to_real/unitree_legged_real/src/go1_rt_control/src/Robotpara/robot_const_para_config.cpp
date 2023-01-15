@@ -1,6 +1,3 @@
-//
-// Created by chunyuchen on 18-8-23.
-//
 #include "robot_const_para_config.h"
 
 namespace gait {

@@ -165,8 +165,6 @@ int main(int argc, char *argv[])
     int pub_rate  = (int) (round(1/dt_mpc));
 
     ros::Rate nrt_rate(pub_rate);
-    step_length = 0.00;
-    step_width = 0;
 
     
     ros::Duration duratione_des(dt_mpc);
