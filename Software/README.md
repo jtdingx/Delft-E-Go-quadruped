@@ -30,6 +30,8 @@ Add catkin dependency, please make sure you already have successfully tested the
 
 2, "unitree_ros_to_real" provides hardware implementation (run on the local computer)
 
+The repo contains PEA force compensation, you can disable it by set "enable_spring:0" in the "config.yaml"
+
 # **Dependency**
 
 Make sure you already know how to control Go1 robot in the "Low-level" control mode ("https://github.com/unitreerobotics/unitree_ros_to_real")
