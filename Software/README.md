@@ -32,13 +32,13 @@ Add catkin dependency, please make sure you already have successfully tested the
 
 # **Dependency**
 
-Make sure you already know how to control Go1 robot in the "Low-level" control leve ("https://github.com/unitreerobotics/unitree_ros_to_real")
+Make sure you already know how to control Go1 robot in the "Low-level" control mode ("https://github.com/unitreerobotics/unitree_ros_to_real")
 
 # **Build and Run**
 
-(1) Put the "unitree_ros" in you own workspcce "src/", then "catkin_make"
+(1) Put the "unitree_legged_real" in you own workspcce "src/", then "catkin_make"
 
-(1) load gazebo simulator using GO1 desription: 'roslaunch unitree_legged_real real.launch'
+(1) start real robot in "lowlevel" control mode: 'roslaunch unitree_legged_real real.launch'
 
 (2) start real-time control loop: ' rosrun unitree_legged_real go1_servo_control'
 
