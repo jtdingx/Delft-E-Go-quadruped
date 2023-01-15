@@ -51,5 +51,6 @@ Make sure you already know how to control Go1 robot in the "Low-level" control m
               then, try "W". "S", "A", "D",
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 One open source lib from "https://github.com/ShuoYangRobotics/A1-QP-MPC-Controller" has been integrated, but not test yet.
 
