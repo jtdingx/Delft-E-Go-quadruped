@@ -1,6 +1,6 @@
 This repo contains all materials for reproducing Delft E-Go: a new articulated compliant quadrupedal robot
-![Alt text](unitree_ros/test_pictures/bipedal_go1.png?raw=true "Bipedal") 
-![Alt text](unitree_ros/test_pictures/troting_go1.png?raw=true "Troting")
+![Alt text](PEAs Design_CAD files/side_view_E_Go.jpg?raw=true "E-Go assembly") 
+![Alt text](PEAs Design_CAD files/E_Go_test.png?raw=true "E-Go test")
 
 
 
