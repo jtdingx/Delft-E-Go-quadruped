@@ -74,10 +74,10 @@ FR_k_spring_hip: 7
 FL_k_spring_hip: 7
 RR_k_spring_hip: 7
 RL_k_spring_hip: 7
-FR_k_spring_thigh: 18
+FR_k_spring_thigh: 15
 FL_k_spring_thigh: 15
-RR_k_spring_thigh: 16
-RL_k_spring_thigh: 19
+RR_k_spring_thigh: 15
+RL_k_spring_thigh: 15
 FR_k_spring_calf: 6
 FL_k_spring_calf: 6
 RR_k_spring_calf: 6
@@ -109,7 +109,7 @@ com_rpy_min2: -0.005
 ###### controller mode
 uisng_current_jaco1: 1  ####using estimated Jacobian
 using_ff1: 1            ####using feedfoward torque
-enable_spring: 0        #### engage springs
+enable_spring: 1        #### engage springs
 global_com_feedback1: 1 ####tracking global CoM /// should track the global com when walking ///// 
 switch_support1: 1     #### should be 1 when not using ekf works when tracking the relative state, i.e, global_com_feedback1 and tracking_global_foot are 0
 judge_early_contact: 1
