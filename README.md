@@ -6,6 +6,7 @@ This repo contains all materials for reproducing Delft E-Go: a new articulated c
 
 # **Build and Run**
 "Hardware_CAD" contains a CAD file for E-Go design;
+
 "Software" contains all the files for E-Go control, including codes for Gazebo simulation and Hardware control. Detailed instructions can be found in the subdir.
 
 
