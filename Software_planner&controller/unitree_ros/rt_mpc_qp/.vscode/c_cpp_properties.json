@@ -1,0 +1,23 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/jiatao/ubtech_robots/webots_ws/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/jiatao/catkin_ws/src/beginner_tutorials/include/**",
+        "/home/jiatao/ubtech_robots/webots_ws/src/leg_motion/include/**",
+        "/home/jiatao/ubtech_robots/webots_ws/src/leg_motion_lckmp/include/**",
+        "/home/jiatao/ubtech_robots/webots_ws/src/nrt_mpc_kmp/include/**",
+        "/home/jiatao/ubtech_robots/webots_ws/src/rt_mpc_qp/include/**",
+        "/home/jiatao/ubtech_robots/webots_ws/src/webots_api/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}

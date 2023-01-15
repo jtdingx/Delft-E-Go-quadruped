@@ -1,0 +1,6 @@
+<launch>
+<param name="use_sim_time" value="true" />
+<node pkg="rt_mpc_qp" type="rt_mpc_node" name="rt_mpc_node" respawn="false" respawn_delay="1" output="screen">
+</node>
+
+</launch>

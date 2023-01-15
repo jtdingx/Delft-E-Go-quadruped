@@ -1,0 +1,386 @@
+####for EKF estimator
+PROCESS_NOISE_PIMU: 0.01
+PROCESS_NOISE_VIMU: 0.01
+PROCESS_NOISE_PFOOT: 0.01
+SENSOR_NOISE_PIMU_REL_FOOT: 0.005
+SENSOR_NOISE_VIMU_REL_FOOT: 0.01
+SENSOR_NOISE_ZFOOT: 0.005
+fz_limit_ekf: 200
+assume_flat_ground: 1
+using_ros_time: 1  ##### using real dt for ekf
+using_ekf: 0       #### ekf as state estimator 
+
+
+# #!!!! joint tracking controller: high pd gains when increasing ff torque!!!!!!!!
+# Kp_joint_retarget0: 60
+# Kp_joint_retarget1: 60
+# Kp_joint_retarget2: 60
+# Kp_joint_retarget3: 60
+# Kp_joint_retarget4: 60
+# Kp_joint_retarget5: 60
+# Kp_joint_retarget6: 60
+# Kp_joint_retarget7: 70
+# Kp_joint_retarget8: 70
+# Kp_joint_retarget9: 70
+# Kp_joint_retarget10: 70
+# Kp_joint_retarget11: 70
+# Kd_joint_retarget0: 2
+# Kd_joint_retarget1: 2
+# Kd_joint_retarget2: 2
+# Kd_joint_retarget3: 2
+# Kd_joint_retarget4: 2
+# Kd_joint_retarget5: 2
+# Kd_joint_retarget6: 2
+# Kd_joint_retarget7: 2
+# Kd_joint_retarget8: 2
+# Kd_joint_retarget9: 3
+# Kd_joint_retarget10: 3
+# Kd_joint_retarget11: 3
+
+
+# ##### joint tracking controller: 500 hz/1000Hz
+# Kp_joint_retarget0: 60
+# Kp_joint_retarget1: 60
+# Kp_joint_retarget2: 60
+# Kp_joint_retarget3: 60
+# Kp_joint_retarget4: 60
+# Kp_joint_retarget5: 60
+# Kp_joint_retarget6: 60
+# Kp_joint_retarget7: 60
+# Kp_joint_retarget8: 60
+# Kp_joint_retarget9: 60
+# Kp_joint_retarget10: 60
+# Kp_joint_retarget11: 60
+# Kd_joint_retarget0: 2
+# Kd_joint_retarget1: 2
+# Kd_joint_retarget2: 2
+# Kd_joint_retarget3: 2
+# Kd_joint_retarget4: 2
+# Kd_joint_retarget5: 2
+# Kd_joint_retarget6: 2
+# Kd_joint_retarget7: 2
+# Kd_joint_retarget8: 2
+# Kd_joint_retarget9: 2
+# Kd_joint_retarget10: 2
+# Kd_joint_retarget11: 2
+
+# ##### joint tracking controller: lower pd gains
+# Kp_joint_retarget0: 20
+# Kp_joint_retarget1: 25
+# Kp_joint_retarget2: 25
+# Kp_joint_retarget3: 20
+# Kp_joint_retarget4: 25
+# Kp_joint_retarget5: 25
+# Kp_joint_retarget6: 20
+# Kp_joint_retarget7: 25
+# Kp_joint_retarget8: 25
+# Kp_joint_retarget9: 20
+# Kp_joint_retarget10: 25
+# Kp_joint_retarget11: 25
+# Kd_joint_retarget0: 1
+# Kd_joint_retarget1: 1
+# Kd_joint_retarget2: 1
+# Kd_joint_retarget3: 1
+# Kd_joint_retarget4: 1
+# Kd_joint_retarget5: 1
+# Kd_joint_retarget6: 1
+# Kd_joint_retarget7: 1
+# Kd_joint_retarget8: 1
+# Kd_joint_retarget9: 1
+# Kd_joint_retarget10: 1
+# Kd_joint_retarget11: 1
+
+
+# ##### joint tracking controller: 500 hz
+# Kp_joint_retarget0: 70
+# Kp_joint_retarget1: 70
+# Kp_joint_retarget2: 70
+# Kp_joint_retarget3: 70
+# Kp_joint_retarget4: 70
+# Kp_joint_retarget5: 70
+# Kp_joint_retarget6: 70
+# Kp_joint_retarget7: 70
+# Kp_joint_retarget8: 70
+# Kp_joint_retarget9: 70
+# Kp_joint_retarget10: 70
+# Kp_joint_retarget11: 70
+# Kd_joint_retarget0: 1
+# Kd_joint_retarget1: 1
+# Kd_joint_retarget2: 1
+# Kd_joint_retarget3: 1
+# Kd_joint_retarget4: 1
+# Kd_joint_retarget5: 1
+# Kd_joint_retarget6: 1
+# Kd_joint_retarget7: 1
+# Kd_joint_retarget8: 1
+# Kd_joint_retarget9: 1
+# Kd_joint_retarget10: 1
+# Kd_joint_retarget11: 1
+
+##### joint tracking controller
+Kp_joint_retarget0: 60
+Kp_joint_retarget1: 50
+Kp_joint_retarget2: 50
+Kp_joint_retarget3: 60
+Kp_joint_retarget4: 50
+Kp_joint_retarget5: 50
+Kp_joint_retarget6: 60
+Kp_joint_retarget7: 60
+Kp_joint_retarget8: 60
+Kp_joint_retarget9: 60
+Kp_joint_retarget10: 60
+Kp_joint_retarget11: 60
+
+Kd_joint_retarget0: 1.5
+Kd_joint_retarget1: 1.5
+Kd_joint_retarget2: 1.5
+Kd_joint_retarget3: 1.5
+Kd_joint_retarget4: 1.5
+Kd_joint_retarget5: 1.5
+Kd_joint_retarget6: 1.5
+Kd_joint_retarget7: 1.5
+Kd_joint_retarget8: 1.5
+Kd_joint_retarget9: 1.5
+Kd_joint_retarget10: 1.5
+Kd_joint_retarget11: 1.5
+
+
+
+### spring_k: should be estimated by the full body dynamics: spring constant+gravity constant+friction test
+FR_k_spring_hip: 7
+FL_k_spring_hip: 7
+RR_k_spring_hip: 7
+RL_k_spring_hip: 7
+# FR_k_spring_thigh: 18
+FR_k_spring_thigh: 0 ###not realy engaging
+FL_k_spring_thigh: 15
+RR_k_spring_thigh: 16
+RL_k_spring_thigh: 19
+FR_k_spring_calf: 7
+FL_k_spring_calf: 7
+RR_k_spring_calf: 7
+RL_k_spring_calf: 6
+
+
+
+
+###### ======================swing leg impedance control=====================
+tracking_global_foot: 0
+
+# ###### 1000hz
+# ###without Jacobian transition, without spring
+# swingkp0: 50
+# swingkp1: 50
+# swingkp2: 50
+# swingkd0: 3
+# swingkd1: 4
+# swingkd2: 4
+# RLswingkp0: 40
+# RLswingkp1: 40
+# RLswingkp2: 50
+# RLswingkd0: 2
+# RLswingkd1: 2
+# RLswingkd2: 2
+
+###### 1000hz
+###without Jacobian transition, with spring: largy yaw woud caused instability
+# RLswingkp0: 50
+# RLswingkp1: 40
+# RLswingkp2: 50
+# RLswingkd0: 2
+# RLswingkd1: 2
+# RLswingkd2: 2
+# swingkp0: 25
+# swingkp1: 20
+# swingkp2: 25
+# swingkd0: 1
+# swingkd1: 1
+# swingkd2: 1
+# RLswingkp0: 25
+# RLswingkp1: 20
+# RLswingkp2: 25
+# RLswingkd0: 1
+# RLswingkd1: 1
+# RLswingkd2: 1
+
+# swingkp0: 25
+# swingkp1: 20
+# swingkp2: 25
+# swingkd0: 1
+# swingkd1: 1
+# swingkd2: 1
+RLswingkp0: 25
+RLswingkp1: 20
+RLswingkp2: 25
+RLswingkd0: 1
+RLswingkd1: 1
+RLswingkd2: 1
+
+swingkp0: 0
+swingkp1: 0
+swingkp2: 0 
+swingkd0: 0
+swingkd1: 0
+swingkd2: 0
+
+
+########## ====support leg: for GRF compensation ==== debug ###======
+# ###### 1k hk lower-level control, without spring
+# kpp0: 100
+# kpp1: 100
+# kpp2: 30
+# kdp0: 2
+# kdp1: 2
+# kdp2: 2
+
+# kpw0: 50
+# kpw1: 50
+# kpw2: 20
+# kdw0: 2 
+# kdw1: 1
+# kdw2: 1 
+
+# ###### 1k hk lower-level control, with spring
+# kpp0: 50
+# kpp1: 50
+# kpp2: 30
+# kdp0: 2
+# kdp1: 2
+# kdp2: 2
+
+# kpw0: 50
+# kpw1: 50
+# kpw2: 20
+# kdw0: 2 
+# kdw1: 1
+# kdw2: 1 
+
+
+
+
+####### hardware test: 500Hz
+kpp0: 0
+kpp1: 0
+kpp2: 30
+kdp0: 0
+kdp1: 0
+kdp2: 2
+
+
+kpw0: 0
+kpw1: 0
+kpw2: 0 ###large==vibration
+kdw0: 0
+kdw1: 0
+kdw2: 0
+
+
+
+### =========no using body pose&rpy tracking: derivative gains should be reduced to make it smoother 
+w_pos_m_kp0: 0.00
+w_pos_m_kp1: 0.00
+w_pos_m_kp2: 0.0
+w_pos_m_kd0: 0.0000
+w_pos_m_kd1: 0.0000
+w_pos_m_kd2: 0.0000
+
+w_rpy_m_kp0: 0.0
+w_rpy_m_kp1: 0.0
+w_rpy_m_kp2: 0.0
+w_rpy_m_kd0: 0.00000
+w_rpy_m_kd1: 0.00000
+w_rpy_m_kd2: 0.0000
+
+com_pos_max2: 0.01
+com_pos_min2: -0.01
+com_rpy_max2: 0.001
+com_rpy_min2: -0.001
+
+
+
+##########################===============//////////////////////////////
+###### controller mode
+uisng_current_jaco1: 1  ####using estimated Jacobian
+using_ff1: 1            ####using feedfoward torque
+enable_spring: 0        #### engage springs
+global_com_feedback1: 1 ####tracking global CoM /// should track the global com when walking ///// 
+switch_support1: 1     #### should be 1 when not using ekf works when tracking the relative state, i.e, global_com_feedback1 and tracking_global_foot are 0
+judge_early_contact: 1
+
+
+debug_mode1: 1
+using_rotz: 0
+judge_later_contact: 0
+using_grf_node1: 0      #####using other Grf node for grf generation: or MPC
+
+
+###time interval for hardware
+dt_grf1: 0.002  ####grf node frequency, e.g, the CONVEX MPC for grf generation
+dt_rt_loop1: 0.001  ### real-time control loop_time_inteval
+
+#### com filter#############
+fcut_off11: 3   ### com position computed by NLP LOOP
+fcut_off21: 5   ### com velocity computed by NLP LOOP
+fcut_off31: 20  ### com acceleration computed by NLP LOOP
+### CoM velocity filter for acceleration feedback (VMC control)
+fcut_off51: 20 
+### grf force filter
+fcutoff_comx41: 30
+##### measure fz_force threshold
+fz_limit1: 200
+
+
+fsr_contact: 1 ##### using the fsr sensor to judge if in contact  
+
+#### test_mode:
+test_stepping_in_place: 1 ####step_in_place(sin curves) or stepping forward (nlp-planner)
+###test_leg_motion: 0; right swing; 1 left swing; 2 double swing
+test_leg: 2
+
+
+use_terrain_adapt: 0 ###terrain adaptation when computing GRF;
+
+
+##### gait parameters##############
+##### body pose homing pose ####
+body_p_Homing_Retarget0: 0.01
+body_p_Homing_Retarget1: -0.000
+body_p_Homing_Retarget2: 0.29
+body_r_Homing_Retarget0: 0
+body_r_Homing_Retarget1: 0.01  ####positive cause backwards motion;;; negetive cause forwards
+body_r_Homing_Retarget2: 0
+
+dt_slow_mpc: 0.01
+step_length: 0.00
+step_width: 0.00
+step_height: 0
+foot_clear_height: 0.05
+t_period: 0.2 ###step period
+total_mass: 13
+
+#### NLP feedback coefficient:[0,1]:should be large enough
+# _lamda_comx: 0.99 ##0.8
+# _lamda_comvx: 0.99
+# _lamda_comy: 0.99 ##0.8
+# _lamda_comvy: 0.99
+_lamda_comx: 1 ##0.8
+_lamda_comvx: 1
+_lamda_comy: 1 ##0.8
+_lamda_comvy: 1
+
+
+#### weight for NLP cost
+_aax: 1000
+_aay: 1000
+_aaxv: 10
+_aayv: 10
+_bbx: 8000000
+_bby: 8000000
+_rr1: 5000000
+_rr2: 5000000
+_aax1: 1      ###should be small enough   
+_aay1: 1      ###should be small enough
+_bbx1: 10           
+_bby1: 10
+_rr11: 100          
+_rr21: 100	
