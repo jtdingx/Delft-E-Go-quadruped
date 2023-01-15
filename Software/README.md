@@ -1,51 +1,50 @@
-# **Introduction**
+1, "Unitree_ros" provides a general locomotion control framework for legged robots(taking the unitree go1-simulation for example)
 
-This is a general framework for legged robots - ros_gazebo simulation (taking the unitree gol for example)
-
-![Alt text](unitree_ros/test_pictures/bipedal_go1.png?raw=true "Bipedal") 
-![Alt text](unitree_ros/test_pictures/troting_go1.png?raw=true "Troting")
-
-
-
-
-Putting "unitree_ros" under your catkin workspace "src/" dir, then "catkin_make" will work ....
-
-Already tested on Ros Moledic
+Already tested on Ros Moledic/Noetic
 
 
 # **Dependency**
 
-(1) Add catkin dependency, please make sure you already have successfully tested the "unitree_ros" repo from "https://github.com/unitreerobotics/unitree_ros".
+Add catkin dependency, please make sure you already have successfully tested the "unitree_ros" repo from "https://github.com/unitreerobotics/unitree_ros".
 
-(2) Install C++ optimization library "Mosek" (academic license), following a guide from "https://docs.mosek.com/latest/cxxfusion/index.html". 
-                                
-                                ----- Mosek 9.0.XX or a newer version should work (downloaded from "https://www.mosek.com/downloads/list/9/")
-
-                         Note!!!! replace the mosek library directory in "unitree_ros/mosek_nlp_kmp/CMakeLists.txt" by your own location.  
-
-(3) Install c++ matrix armadillo:
-
-                                sudo apt-get install liblapack-dev
-                                
-                                sudo apt-get install libblas-dev
-                                
-                                sudo apt-get install libboost-dev
-                                
-                                sudo apt-get install libarmadillo-dev
-                                
-////////////////////////////////////////////////////////////////////
 
 # **Build and Run**
 
-(1) 'caktin_make'
+(1) Put the "unitree_ros" in you own workspcce "src/", then "catkin_make"
 
-(2) 'source devel/setup.bash'
+(1) load gazebo simulator using GO1 desription: 'roslaunch unitree_gazebo normal.launch rname:=go1 wname:=empty'
 
-(3) load gazebo simulator using GO1 desription: 'roslaunch unitree_gazebo normal.launch rname:=go1 wname:=empty' (Motion planning nodes also start at the same time)
+(2) start real-time control loop: ' rosrun go1_rt_control go1_servo'
 
-(4) test the locomotion: 'rosrun rosrun go1_rt_control go1_servo'
+(3) keyboard control: ' rosrun go1_rt_control go1_teleop_control'
+        
+         "1": go to homing pose
+         
+         "2": enter the "walking mode"
+            
+              then, try "W". "S", "A", "D",
 
-           ---------change 'gait_mode' to be 101 or 102 (defined in " unitree_ros/go1_rt_control/src/servo_control/servo.cpp"), to see what will happen.
-           
- Good luck.
+
+2, "unitree_ros_to_real" provides hardware implementation (run on the local computer)
+
+# **Dependency**
+
+Make sure you already know how to control Go1 robot in the "Low-level" control leve ("https://github.com/unitreerobotics/unitree_ros_to_real")
+
+# **Build and Run**
+
+(1) Put the "unitree_ros" in you own workspcce "src/", then "catkin_make"
+
+(1) load gazebo simulator using GO1 desription: 'roslaunch unitree_legged_real real.launch'
+
+(2) start real-time control loop: ' rosrun unitree_legged_real go1_servo_control'
+
+(3) keyboard control: ' rosrun unitree_legged_real go1_teleop_control'
+        
+         "1": go to homing pose
+         
+         "2": enter the "walking mode"
+            
+              then, try "W". "S", "A", "D",
+
 
