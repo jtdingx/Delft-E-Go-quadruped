@@ -1,16 +1,19 @@
-####for EKF estimator
-PROCESS_NOISE_PIMU: 0.05
-PROCESS_NOISE_VIMU: 0.05
-PROCESS_NOISE_PFOOT: 0.05
-SENSOR_NOISE_PIMU_REL_FOOT: 0.005
-SENSOR_NOISE_VIMU_REL_FOOT: 0.10
-SENSOR_NOISE_ZFOOT: 0.005
-fz_limit_ekf: 200
+#### this file contains the parameters for planner and controller
+
+####for EKF estimator ##########################
+PROCESS_NOISE_PIMU: 0.01
+PROCESS_NOISE_VIMU: 0.01
+PROCESS_NOISE_PFOOT: 0.01
+SENSOR_NOISE_PIMU_REL_FOOT: 0.001
+SENSOR_NOISE_VIMU_REL_FOOT: 0.005
+SENSOR_NOISE_ZFOOT: 0.01
+
 assume_flat_ground: 1
 using_ros_time: 1  ##### using real dt for ekf
-using_ekf: 0       #### ekf as state estimator 
+using_ekf: 1       #### ekf as state estimator 
+fz_limit_ekf: 200
 
-
+####################### controller ###########################3
 ##### joint tracking controller
 Kp_joint_retarget0: 60
 Kp_joint_retarget1: 60
@@ -21,9 +24,9 @@ Kp_joint_retarget5: 60
 Kp_joint_retarget6: 60
 Kp_joint_retarget7: 60
 Kp_joint_retarget8: 60
-Kp_joint_retarget9: 70
-Kp_joint_retarget10: 70
-Kp_joint_retarget11: 70
+Kp_joint_retarget9: 60
+Kp_joint_retarget10: 60
+Kp_joint_retarget11: 60
 
 Kd_joint_retarget0: 1
 Kd_joint_retarget1: 1.5
@@ -39,51 +42,98 @@ Kd_joint_retarget10: 1.5
 Kd_joint_retarget11: 1.5
 
 #################### the below is for walking without spring####
-########## CoM acceleration: for GRF compensation ###
+########## CoM acceleration: for GRF compensation: state feedback ###
+# kpp0: 30
+# kpp1: 30
+# kpp2: 30
+# kdp0: 5
+# kdp1: 5
+# kdp2: 5
+# kpw0: 30
+# kpw1: 30
+# kpw2: 30 ###large==vibration
+# kdw0: 2
+# kdw1: 2
+# kdw2: 2
 
-kpp0: 30
-kpp1: 30
-kpp2: 30
-kdp0: 2
-kdp1: 2
-kdp2: 2
+####
+kpp0: 10
+kpp1: 10
+kpp2: 10
+#### small one with ekf estimator
+kdp0: 0.1
+kdp1: 0.1
+kdp2: 0.1
 
-
-kpw0: 30
-kpw1: 30
-kpw2: 30 ###large==vibration
-kdw0: 2
-kdw1: 2
-kdw2: 2
+kpw0: 10
+kpw1: 10
+kpw2: 20 ###large==vibration
+kdw0: 0.1
+kdw1: 0.1
+kdw2: 1
 
 
 ###### swing leg impedance control
 tracking_global_foot: 0
 
-
 swingkp0: 30
 swingkp1: 30 
 swingkp2: 30 
-swingkd0: 2
-swingkd1: 2
-swingkd2: 2
+swingkd0: 1
+swingkd1: 1
+swingkd2: 1
 
 
 ### spring_k: should be estimated by the full body dynamics
-FR_k_spring_hip: 7
-FL_k_spring_hip: 7
-RR_k_spring_hip: 7
-RL_k_spring_hip: 7
-FR_k_spring_thigh: 15
-FL_k_spring_thigh: 15
-RR_k_spring_thigh: 15
-RL_k_spring_thigh: 15
-FR_k_spring_calf: 6
-FL_k_spring_calf: 6
-RR_k_spring_calf: 6
-RL_k_spring_calf: 6
+### hip spring
+FR_k_spring_hip: 2
+FL_k_spring_hip: 2
+RR_k_spring_hip: 2
+RL_k_spring_hip: 2
 
-### body pose&rpy tracking: derivative gains should be reduced to make it smoother 
+
+
+### thigh spring
+FR_k_spring_thigh: 0
+FL_k_spring_thigh: 0
+RR_k_spring_thigh: 0
+RL_k_spring_thigh: 0
+
+# ### thigh spring
+# FR_k_spring_thigh: 19
+# FL_k_spring_thigh: 19
+# RR_k_spring_thigh: 18
+# RL_k_spring_thigh: 18
+
+
+
+
+
+##########no calf springs 
+FR_k_spring_calf: 0
+FL_k_spring_calf: 0
+RR_k_spring_calf: 0
+RL_k_spring_calf: 0
+# # #softest calf springs 
+# # FR_k_spring_calf: 7
+# # FL_k_spring_calf: 7
+# # RR_k_spring_calf: 7
+# # RL_k_spring_calf: 7
+
+# #calf springs 
+# FR_k_spring_calf: 9
+# FL_k_spring_calf: 9
+# RR_k_spring_calf: 8
+# RL_k_spring_calf: 8
+
+# #calf springs harder 
+# FR_k_spring_calf: 14
+# FL_k_spring_calf: 14
+# RR_k_spring_calf: 14
+# RL_k_spring_calf: 14
+
+### body pose&rpy tracking: derivative gains should be reduced to make it smoother####
+#### not using !!!!!!!!! 
 w_pos_m_kp0: 0.00
 w_pos_m_kp1: 0.00
 w_pos_m_kp2: 0.0
@@ -105,87 +155,99 @@ com_rpy_min2: -0.005
 
 
 
-##########################===============//////////////////////////////
+##########################==== control logic ====//////////////////////////////
 ###### controller mode
 uisng_current_jaco1: 1  ####using estimated Jacobian
-using_ff1: 1            ####using feedfoward torque
+using_ff1: 1          ####using feedfoward torque
 enable_spring: 1        #### engage springs
-global_com_feedback1: 1 ####tracking global CoM /// should track the global com when walking ///// 
+global_com_feedback1: 0 ####tracking global CoM /// shouldn't track the global com when walking ///// 
 switch_support1: 1     #### should be 1 when not using ekf works when tracking the relative state, i.e, global_com_feedback1 and tracking_global_foot are 0
-judge_early_contact: 1
 
 
-debug_mode1: 0
+
+debug_mode1: 0   #### send the command to motor sevor?
 using_rotz: 0
+judge_early_contact: 1
 judge_later_contact: 0
-using_grf_node1: 0      ####using other Grf node
+using_grf_node1: 0      ####using the external Grf node?
 
 
-###time interval for hardware
+###time interval for hardware test ######
 dt_grf1: 0.002
-dt_rt_loop1: 0.001
+dt_rt_loop1: 0.002
 
 #### com filter#############
 fcut_off11: 3
-fcut_off21: 7
+fcut_off21: 5
 fcut_off31: 20
 ###CoM velocity filter for acceleration feedback
 fcut_off51: 20 
 ### grf force filter
 fcutoff_comx41: 50
-##### measure fz_force threshold
+##### measure fz_force threshold: contact
 fz_limit1: 200
 
-###test_leg_motion: 0; right swing; 1 left swing; 2 double swing
+###test_leg_motion: 0; right swing; 1 left swing; 2 double swing ##############
 test_leg: 2
 
 #### test_mode:
 test_stepping_in_place: 0 ####step_in_place(sin curves) and stepping forward (nlp-planner)
+test_mpc_grf: 1 ### test mpc grf node in the nrt_nlp node
 
-fsr_contact: 0 ##### merely using the real contact status  
 use_terrain_adapt: 0 ###terrain adaptation when computing GRF;
 
 
-##### gait parameters##############
+##### gait parameters###########################################
 ##### body pose homing pose ####
 body_p_Homing_Retarget0: 0.01
-body_p_Homing_Retarget1: 0.005
+body_p_Homing_Retarget1: 0
 body_p_Homing_Retarget2: 0.3
 body_r_Homing_Retarget0: 0
 body_r_Homing_Retarget1: 0.00  ####positive cause backwards motion;;; negetive cause forwards
-body_r_Homing_Retarget2: 0
+body_r_Homing_Retarget2: 0.000 #### set to be zeros with lateral motion, 0.005 when walking forward
 
+
+##########################===============//////////////////////////////
+##### gait parameters ####
+footnumber: 100
 dt_slow_mpc: 0.01
-step_length: 0.00
-step_width: 0.00
+step_length: 0.0  # energy_efficiency test: 0.01, 0.03, 0.05, 0.07(test) 
+step_width: 0  ## lateral motion: x 0.05, y -0.01
 step_height: 0
-foot_clear_height: 0.05
-t_period: 0.3 ###step period
+foot_clear_height: 0.06
+t_period: 0.3 ###step period: normal; 0.3, 
 total_mass: 13
+using_hie_using: 0 ###using the rt_mpc data //// here we do not use the rt_mpc 
 
-#### NLP feedback coefficient:[0,1]:should be large enough
-# _lamda_comx: 0.99 ##0.8
-# _lamda_comvx: 0.99
-# _lamda_comy: 0.99 ##0.8
-# _lamda_comvy: 0.99
-_lamda_comx: 1 ##0.8
+### first layer
+_aax:  10000000
+_aay:  1000000
+_aaxv: 5000          
+_aayv: 1000
+_bbx:  500000000       
+_bby:  500000000
+_rr1:  500000000      
+_rr2:  500000000 
+_aax1: 100            
+_aay1: 100
+_bbx1: 1000            
+_bby1: 1000
+_rr11: 10000          
+_rr21: 10000
+
+### feedback
+_lamda_comx: 1
 _lamda_comvx: 1
-_lamda_comy: 1 ##0.8
+_lamda_comy: 1
 _lamda_comvy: 1
 
-
-#### weight for NLP cost
-_aax: 1000
-_aay: 1000
-_aaxv: 10
-_aayv: 10
-_bbx: 5000000
-_bby: 5000000
-_rr1: 5000000
-_rr2: 5000000
-_aax1: 1      ###should be small enough   
-_aay1: 1      ###should be small enough
-_bbx1: 10           
-_bby1: 10
-_rr11: 100          
-_rr21: 100	
+### second layer:200Hz
+dt_fast_mpc: 0.005
+_Rthetax: 1                          
+_Rthetay: 1       
+_alphathetax: 100                    
+_alphathetay: 100       
+_beltathetax: 50000000                
+_beltathetay: 50000000 
+_gama_zmpx: 1000                     
+_gama_zmpy: 1000 

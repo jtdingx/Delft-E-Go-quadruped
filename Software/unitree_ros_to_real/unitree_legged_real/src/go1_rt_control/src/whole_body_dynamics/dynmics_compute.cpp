@@ -370,13 +370,13 @@ void Dynamiccclass::force_opt(Eigen::Matrix<double, 3,1> base_p,
     }
 
 
-    // for(int j=0; j<4;j++)
-    // {
-    //     if(contact_flag(j)<0.5) ///this leg is a swing leg;
-    //     {
-    //         AA.block<3,3>(3*j,3*j) = A_unit;            
-    //     }
-    // }
+    for(int j=0; j<4;j++)
+    {
+        if(contact_flag(j)<0.5) ///this leg is a swing leg;
+        {
+            AA.block<3,3>(3*j,3*j) = A_unit;            
+        }
+    }
 
 
 

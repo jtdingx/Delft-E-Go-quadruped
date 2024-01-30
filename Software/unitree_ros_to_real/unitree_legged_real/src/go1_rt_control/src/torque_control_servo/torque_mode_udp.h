@@ -17,7 +17,8 @@ Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 #include "Filter/butterworth_filter.h"
 #include "Filter/butterworthLPF.h"
 #include "whole_body_dynamics/dynmics_compute.h"
-
+// // add pinocchio 
+#include "whole_body_dynamics/pinocchio_model.h"
 
 #include "sensor_msgs/Imu.h"
 
@@ -26,18 +27,20 @@ Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 #include "utils/filter.hpp"
 #include "go1_const.h"
 ///// state estimation
-#include "Robotpara/A1Params.h"
-#include "Robotpara/A1CtrlStates.h"
-#include "A1EKF/A1BasicEKF.h"
-#include "A1EKF/state_estimator.h"
-
+#include "Robotpara/Go1Params.h"
+#include "Robotpara/Go1CtrlStates.h"
+#include "Go1EKF/Go1BasicEKF.h"
+#include "Go1EKF/state_estimator.h"
+#include "Go1legKinematics/Go1Kinematics.h"
+#include <gazebo_msgs/ModelStates.h>
+#include <geometry_msgs/PoseStamped.h>
 
 
 using namespace UNITREE_LEGGED_SDK;
 
 
 const int torque_err_row = 500;
-const int ctrl_estimation = 1000;
+const int ctrl_estimation = 500;
 const float pi=3.1415926;
 ////////// switch 2 udp
 class Quadruped{
@@ -63,6 +66,7 @@ class Quadruped{
     ros::Publisher gait_data_pub; // for data_analysis
     ros::Publisher gait_data_pubx;  
     ros::Publisher gait_step_real_time; ////for optimization;
+
     //////
     long motiontime;
     LowCmd SendLowROS;
@@ -71,6 +75,20 @@ class Quadruped{
     sensor_msgs::JointState joint2simulation,leg2sim,date2wbc;
 
     bool initiated_flag;
+
+    ///****** pinocchio ***********////
+
+
+    // using namespace pinocchio;
+
+    WBDClass WBDpino;
+
+    Eigen::Matrix<double,12,1> torque_bias; /////coriolis, centrifual and gravity;
+    Eigen::Matrix<double,12,1> torque_gravity; //// generalized gravity;
+    Eigen::Matrix<double,12,1> torque_coriolis; //// generalized coriolis;
+
+
+
 
     //////// for trajectory generation  ======================
     int count = 0;   
@@ -87,7 +105,10 @@ class Quadruped{
     ros::Subscriber nrt_mpc_gait_subscribe_;
     ros::Publisher rt_to_nrt_pub_;
     ros::Subscriber Grf_gait_subscribe_;
-    ros::Subscriber gain_cmd;    
+    ros::Subscriber gain_cmd; 
+    ros::Subscriber rt_mpc_gait_subscribe_;
+    ros::Subscriber ground_truch_model_state;
+
 
     ros::Time prev;
     ros::Time now;  
@@ -161,6 +182,7 @@ class Quadruped{
 
 
     int n_count;
+    int n_count_calibration;
 
     double lastPos[12], percent, pos_cmd[12];
     double stand_duration;
@@ -307,6 +329,16 @@ class Quadruped{
     double comv_sensor[3];
     double comv_sensor_raw[3];
     double coma_sensor[3];
+
+    double com_des_ini[3];
+    double rfoot_des_ini[3];
+    double lfoot_des_ini[3];
+    double theta_des_ini[3];
+
+    double using_fast_mpc;
+
+
+
     double w_pos_m[3];
     double w_rpy_m[3];
     double w_pos_m_filter[3];
@@ -340,7 +372,8 @@ class Quadruped{
 
     bool mpc_start = false;
 
-    Eigen::Matrix<double,25,1> state_feedback;
+    Eigen::Matrix<double,37,1> state_feedback;
+    Eigen::Matrix<double,12,1> support_position_feedback;
     Eigen::Matrix<double,100,1> slow_mpc_gait;
     int mpc_gait_flag,  mpc_gait_flag_old;
     Eigen::Matrix<double,45,1> slow_mpc_gait_inte;
@@ -391,6 +424,9 @@ class Quadruped{
     double clamp_func(double new_cmd, double old_cmd, double thresh);
 
 
+
+
+
     ros::Subscriber gait_des_sub_;
 
     ros::Publisher control_to_rtmpc_pub_;
@@ -422,6 +458,14 @@ class Quadruped{
 
     butterworthLPF butterworthLPF80,butterworthLPF81,butterworthLPF82,butterworthLPF83,butterworthLPF84,butterworthLPF85;
 
+
+
+    //// ===== low-pass-filter: foot support =======/////
+    butterworthLPF  butterworthLPF101,butterworthLPF102,butterworthLPF103,butterworthLPF104,butterworthLPF105,butterworthLPF106,
+    butterworthLPF107,butterworthLPF108,butterworthLPF109,butterworthLPF110,butterworthLPF111,butterworthLPF112;
+
+
+
     double pitch_angle_W;
     int n_period;
 
@@ -450,9 +494,21 @@ class Quadruped{
     std::vector<Eigen::VectorXd> rho_opt_list;
 
     // variables related to control
-    A1CtrlStates a1_ctrl_states;
-    // A1RobotControl _root_control;
-    A1BasicEKF go1_estimate;
+    Go1CtrlStates Go1_ctrl_states;
+    // Go1RobotControl _root_control;
+    Go1BasicEKF go1_estimate;
+    int simulation_mode = 2; ///// hardware test
+    Eigen::Vector3d gra_acc_est;
+    Eigen::Vector3d rot_imu_acc;
+
+    Go1Kinematics go1_kin;
+    ros::Time current_time;
+    ros::Time previous_time;
+    double t_real_time_loop;
+
+    
+
+
 
     // filters
     MovingWindowFilter acc_x;
@@ -468,8 +524,11 @@ class Quadruped{
 
 
 
-    void gait_pose_callback(LowState RecvLowROS);
+    void gait_pose_callback(LowState RecvLowROS,double dt, int j);
     Eigen::Matrix<double, 100,1>  state_est_main_update(double dt);
+    void ground_truth_state_callback(const gazebo_msgs::ModelStates::ConstPtr& msg);
+
+
     double jointLinearInterpolation(double initPos, double targetPos, double rate, int j);
 
     void base_pos_fb_controler();
@@ -478,6 +537,9 @@ class Quadruped{
 
     double  FR_foot_desx, FR_foot_desy,FR_foot_desz;
     double  FL_foot_desx, FL_foot_desy,FL_foot_desz;
+    double  RR_foot_desx, RR_foot_desy,RR_foot_desz;
+    double  RL_foot_desx, RL_foot_desy,RL_foot_desz;
+
     int dynamic_count_period;
 
     void config_set();
@@ -516,6 +578,9 @@ class Quadruped{
     MovingWindowFilter recent_contact_z_filter[4]; 
     Eigen::Vector3d ground_angle;
     double use_terrain_adapt;
+
+
+    double energy_cost;
 
 
 

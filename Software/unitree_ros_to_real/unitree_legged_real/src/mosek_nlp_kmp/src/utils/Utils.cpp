@@ -3,7 +3,6 @@
 //
 
 #include "Utils.h"
-// #define ;
 
 Eigen::Vector3d Utils::quat_to_euler(Eigen::Quaterniond quat) {
     Eigen::Vector3d rst;
@@ -40,59 +39,6 @@ Eigen::Matrix3d Utils::skew(Eigen::Vector3d vec) {
             -vec(1),  vec(0),             0;
     return rst;
 }
-
-
-Eigen::Vector3d rotm_to_euler(Eigen::Matrix3d rotmat) {
-    Eigen::Vector3d rpy;
-    rpy.setZero();
-    double a = 0;
-    double b = 0;
-    double c = 0;
-    double cosC = 0;
-    double sinC = 0;
-    double pi = 3.141592653;
-    if (abs(rotmat(2 ,0) - 1.0) <1.0e-5)   // singularity
-    {
-        a = 0.0;
-        b = - pi * 0.5;
-        c = atan2(-rotmat(0, 1), -rotmat(0, 2));
-    }
-    else
-    {
-        if (abs(rotmat(2, 0) + 1.0) < 1.0e-5)   //singularotmatity
-        {
-            a = 0.0; 
-            b = pi / 2.0;
-            c = -atan2(rotmat(0, 1), rotmat(0, 2));
-        }    
-        else
-        {
-            a = atan2(rotmat(2, 1), rotmat(2, 2));
-            c = atan2(rotmat(1, 0), rotmat(0, 0));
-            //     a = atan2(-rotmat(3, 2), -rotmat(3, 3)); //a另一个解
-            //    c = atan2(-rotmat(2, 1), -rotmat(1, 1));  //c另一个解
-            cosC = cos(c);
-            sinC = sin(c);
-            
-            if (abs(cosC) > abs(sinC))
-            {
-                b = atan2(-rotmat(2, 0), rotmat(0, 0) / cosC);
-            }
-
-            else
-            {
-                b = atan2(-rotmat(2, 0), rotmat(1, 0) / sinC);
-            }
-
-        }
-    }
-    rpy<< a,
-          b,
-          c;
-
-    return rpy;
-}
-
 
 // https://gist.github.com/pshriwise/67c2ae78e5db3831da38390a8b2a209f
 Eigen::Matrix3d Utils::pseudo_inverse(const Eigen::Matrix3d &mat) {
@@ -143,8 +89,8 @@ Eigen::Vector3d BezierUtils::get_foot_pos_curve(float t,
                                 foot_pos_final(2),
                                 foot_pos_final(2),
                                 foot_pos_final(2)};
-    bezierZ[1] += 0;
-    bezierZ[2] += 0.4 + 0.5*sin(terrain_pitch_angle);
+    bezierZ[1] += FOOT_SWING_CLEARANCE1;
+    bezierZ[2] += FOOT_SWING_CLEARANCE2 + 0.5*sin(terrain_pitch_angle);
     foot_pos_target(2) = bezier_curve(t, bezierZ);
 
     return foot_pos_target;
@@ -158,4 +104,80 @@ double BezierUtils::bezier_curve(double t, const std::vector<double> &P) {
         y += coefficients[i] * std::pow(t, i) * std::pow(1 - t, bezier_degree - i) * P[i];
     }
     return y;
+}
+
+Eigen::Matrix3d Utils::Rx(double angle)
+{
+	double ct = std::cos(angle);
+	double st = std::sin(angle);
+	
+	Eigen::Matrix3d result;
+	
+	result << 1, 0,	0,
+			  0,ct,	-st,
+			  0,st,	ct;
+	return result;
+}
+
+Eigen::Matrix3d Utils::Ry(double angle)
+{
+	double ct = std::cos(angle);
+	double st = std::sin(angle);
+	
+	Eigen::Matrix3d result;
+	
+	result << ct,  0,  st,
+			   0,  1,	0,
+			 -st,  0,  ct;
+			 
+	return result;
+}
+
+Eigen::Matrix3d Utils::Rz(double angle)
+{
+	double ct = std::cos(angle);
+	double st = std::sin(angle);
+	
+	Eigen::Matrix3d result;
+	
+	result << ct,  -st,	 0,
+			  st,	ct,	 0, 
+			   0, 	0,	 1;
+			   
+	return result;
+}
+
+
+Eigen::Vector3d Utils::rotationMatrixToEulerAngles(Eigen::Matrix3d R)
+{
+    double sy = sqrt(R(0,0) * R(0,0) +  R(1,0) * R(1,0) );
+    bool singular = sy < 1e-6; // If
+    double x, y, z;
+    if (!singular)
+    {
+        x = atan2(R(2,1) , R(2,2));
+        y = atan2(-R(2,0), sy);
+        z = atan2(R(1,0), R(0,0));
+    }
+    else
+    {
+        x = atan2(-R(1,2), R(1,1));
+        y = atan2(-R(2,0), sy);
+        z = 0;
+    }
+
+    Eigen::Vector3d eular_angle;
+                   eular_angle <<x, 
+                                 y, 
+                                 z;
+    return eular_angle;
+}
+
+
+
+Eigen::Matrix3d  Utils::eulerAnglesToRotationMatrix(Eigen::Vector3d  theta)
+{
+    // Combined rotation matrix
+    Eigen::Matrix3d R = Utils::Rz(theta[2]) * Utils::Ry(theta[1]) * Utils::Rx(theta[0]);
+    return R;
 }

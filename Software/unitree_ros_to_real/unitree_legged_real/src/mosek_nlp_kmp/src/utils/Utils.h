@@ -2,13 +2,14 @@
 // Created by shuoy on 10/19/21.
 //
 
-#ifndef A1_CPP_UTILS_H
-#define A1_CPP_UTILS_H
+#ifndef Go1_CPP_UTILS_H
+#define Go1_CPP_UTILS_H
 
 #include <iostream>
 #include <vector>
 #include <Eigen/Dense>
 
+#include "/home/jiatao/Documents/unitree_sdk_hardware_test/go1_remote_control/src/unitree_ros_to_real/unitree_legged_real/src/mosek_nlp_kmp/src/FORCEMPC_mit/Go1Params.h"
 
 class Utils {
 public:
@@ -18,7 +19,12 @@ public:
     static Eigen::Matrix3d skew(Eigen::Vector3d vec);
     static Eigen::Matrix3d pseudo_inverse(const Eigen::Matrix3d &mat);
     static double cal_dihedral_angle(Eigen::Vector3d surf_coef_1, Eigen::Vector3d surf_coef_2);
-    static Eigen::Vector3d rotm_to_euler(Eigen::Matrix3d rotmat);
+    static Eigen::Matrix3d Rx(double angle);
+    static Eigen::Matrix3d Ry(double angle);
+    static Eigen::Matrix3d Rz(double angle);
+    static Eigen::Matrix3d eulerAnglesToRotationMatrix(Eigen::Vector3d theta);
+    static Eigen::Vector3d rotationMatrixToEulerAngles(Eigen::Matrix3d R);
+
 };
 
 class BezierUtils {
@@ -34,7 +40,7 @@ public:
                                        Eigen::Vector3d foot_pos_final,
                                        double terrain_pitch_angle);
 
-    bool reset_foot_pos_curve() {curve_constructed = false;}
+    // bool reset_foot_pos_curve() {curve_constructed = false;}
 private:
     double bezier_curve(double t, const std::vector<double> &P);
 
@@ -42,4 +48,4 @@ private:
     float bezier_degree;
 };
 
-#endif //A1_CPP_UTILS_H
+#endif //Go1_CPP_UTILS_H

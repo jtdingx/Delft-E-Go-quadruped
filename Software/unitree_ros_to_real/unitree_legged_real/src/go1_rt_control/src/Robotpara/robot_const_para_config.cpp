@@ -3,7 +3,7 @@
 namespace gait {
   
     // const double  dt_mpc_slow = 0.01;   /////first layer MPC-time interval
-    const double  dt_mpc_fast = 0.01; /////second layer MPC-time interval
+    const double  dt_mpc_fast = 0.005; /////second layer MPC-time interval
     const double  dt_grf = 0.002; /////grf update interval
     
     
@@ -11,8 +11,10 @@ namespace gait {
     const double  RobotPara_FOOT_LENGTH = 0.01; 
     const double  RobotPara_FOOT_WIDTH = 0.01;
     const double  RobotPara_HIP_TO_ANKLE_X_OFFSET = 0.0; 
-    const double  RobotParaClass_HALF_HIP_WIDTH = 0.12675;     
+    const double  RobotParaClass_HALF_HIP_WIDTH = 0.12675;   
+    const double  RobotParaClass_HALF_HIP_LENGTH = 0.1881;  
 
+    const double height_offset_time = 0.0;
     // robot parameters
     const double mass = 13;   //total mass      
     const double force_z_limt = 200; //// for real test
@@ -38,10 +40,10 @@ namespace gait {
     const double _g = 9.8;
 
     /// gait parameters
-    const double time_set = 0.75;
+    const double time_set = 0;
 
 
-    const double Z_c = 0.29;
+    const double Z_c = 0.3;
     //ros system constant
     const double t_program_cyclic = 0.0025;  //program running time period
 }

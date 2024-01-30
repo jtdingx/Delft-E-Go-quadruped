@@ -21,6 +21,9 @@ namespace gait{
     extern const double  RobotPara_FOOT_WIDTH;
     extern const double  RobotPara_HIP_TO_ANKLE_X_OFFSET; 
     extern const double  RobotParaClass_HALF_HIP_WIDTH;  
+    extern const double  RobotParaClass_HALF_HIP_LENGTH; 
+
+    extern const double height_offset_time;
   
     /// gait parameters
     extern const double time_set;    ///squat down time

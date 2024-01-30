@@ -1,14 +1,14 @@
 <launch>
     <arg name="ctrl_level" default="lowlevel"/>
 
-    <node pkg="unitree_legged_real" type="lcm_server" name="node_lcm_server"
-          respawn="false" output="screen" args="$(arg ctrl_level)" />
+    <!--<node pkg="unitree_legged_real" type="lcm_server" name="node_lcm_server"
+          respawn="false" output="screen" args="$(arg ctrl_level)" />-->
 
     <param name="control_level" value="$(arg ctrl_level)"/>
 
     <node pkg="unitree_legged_real" type="mosek_nlp_kmp_node" name="mosek_nlp_kmp_node" respawn="false" respawn_delay="1" output="screen">  
     </node>
 
-    <!--<node pkg="unitree_legged_real" type="grf_node" name="grf_node" respawn="false" respawn_delay="1" output="screen">  
-    </node>  -->  
+    <!--<node pkg="unitree_legged_real" type="rt_mpc_node" name="rt_mpc_node" respawn="false" respawn_delay="1" output="screen">  
+    </node>-->
 </launch>

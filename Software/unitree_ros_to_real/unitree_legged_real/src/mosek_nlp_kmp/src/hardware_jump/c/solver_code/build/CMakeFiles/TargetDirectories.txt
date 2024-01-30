@@ -1,0 +1,8 @@
+/home/jiatao/Documents/unitree_sdk_hardware_test/go1_remote_control/src/unitree_ros_to_real/unitree_legged_real/src/mosek_nlp_kmp/src/hardware_jump/c/solver_code/build/CMakeFiles/emosqpstatic.dir
+/home/jiatao/Documents/unitree_sdk_hardware_test/go1_remote_control/src/unitree_ros_to_real/unitree_legged_real/src/mosek_nlp_kmp/src/hardware_jump/c/solver_code/build/CMakeFiles/example.dir
+/home/jiatao/Documents/unitree_sdk_hardware_test/go1_remote_control/src/unitree_ros_to_real/unitree_legged_real/src/mosek_nlp_kmp/src/hardware_jump/c/solver_code/build/CMakeFiles/edit_cache.dir
+/home/jiatao/Documents/unitree_sdk_hardware_test/go1_remote_control/src/unitree_ros_to_real/unitree_legged_real/src/mosek_nlp_kmp/src/hardware_jump/c/solver_code/build/CMakeFiles/rebuild_cache.dir
+/home/jiatao/Documents/unitree_sdk_hardware_test/go1_remote_control/src/unitree_ros_to_real/unitree_legged_real/src/mosek_nlp_kmp/src/hardware_jump/c/solver_code/build/src/osqp/CMakeFiles/edit_cache.dir
+/home/jiatao/Documents/unitree_sdk_hardware_test/go1_remote_control/src/unitree_ros_to_real/unitree_legged_real/src/mosek_nlp_kmp/src/hardware_jump/c/solver_code/build/src/osqp/CMakeFiles/rebuild_cache.dir
+/home/jiatao/Documents/unitree_sdk_hardware_test/go1_remote_control/src/unitree_ros_to_real/unitree_legged_real/src/mosek_nlp_kmp/src/hardware_jump/c/solver_code/build/include/CMakeFiles/edit_cache.dir
+/home/jiatao/Documents/unitree_sdk_hardware_test/go1_remote_control/src/unitree_ros_to_real/unitree_legged_real/src/mosek_nlp_kmp/src/hardware_jump/c/solver_code/build/include/CMakeFiles/rebuild_cache.dir

@@ -84,7 +84,7 @@ void FunctionReceived(const geometry_msgs::Twist& Function_on)
 
 //ros::Subscriber sub = n.subscribe("joy", 10, JoyReceived);
 
-// keyboard control 
+//  以下为键盘控制程序: keyboard control 
 class keyboard_controller  
 {  
     private:  
@@ -181,8 +181,54 @@ void keyboard_controller::keyboardLoop()
 
         switch(char_in)  
         {  
+            case KEYCODE_r:  
+                Re_start = 1;  
+                Direction=0;
+                Speed=0;
+                Up = 0;
+                out_num = KEYCODE_r;
+             break;
+            case KEYCODE_SPACE:  
+                Space = !Space; 
+                out_num = KEYCODE_SPACE;
+            break;
+            case  KEYCODE_a:
+                Direction=min(Direction+1,5.0);
+//                cout<<KEYCODE_a<<endl;
+                out_num = KEYCODE_a;
+            break;
+            case  KEYCODE_d:
+	        	Direction=max(Direction-1,-5.0);
+            out_num = KEYCODE_d;
+            break;
+	          case  KEYCODE_w:
+	       	    Direction=Direction; 
+	        	Speed=min(Speed+1,5.0);
+            out_num = KEYCODE_w;
+            break;
+            case  KEYCODE_s:
+	       	    Speed=max(Speed-1,-5.0);
+	        	Direction=Direction; 
+            out_num = KEYCODE_s;
+            break;
+            case  KEYCODE_j:  
+                Direction=Direction; 
+	        	Up=min(Up+1,10.0);
+            out_num = KEYCODE_j;
+            break;
+            case  KEYCODE_k:  
+                Direction=Direction; 
+	        	Up=max(Up-1,-10.0);
+            out_num = KEYCODE_k;
+            break;
+            case  KEYCODE_x:
+	       	    Speed=0; 
+                Up = 0;
+                Direction=Direction; 
+                out_num = KEYCODE_x;
+            break;
 
-    //==============  robot mode  ===============
+    //==============  机器人模式 robot mode  ===============
             case  KEYCODE_0:
 	       	    Robot_mode_sign = 0;
                 Push_num    =   Push_num + 1;
@@ -247,8 +293,59 @@ void keyboard_controller::keyboardLoop()
             break;
 
 
-   
-    /////////////========================= debug mode================== ///////////////////////////////
+    //==============    跳舞指令 dancing position offest command    ======================
+            // case  KEYCODE_A:
+                 
+            //   Dance_Yside +=  0.0005;
+            //   out_num = KEYCODE_A;
+            // break;
+            // case  KEYCODE_D:
+	       	  //   Dance_Yside +=  -0.0005;
+            //   out_num = KEYCODE_D;
+            // break;
+            // case  KEYCODE_W:
+	       	  //   Dance_Xside +=   0.0005;
+            //   out_num = KEYCODE_W;
+            // break;
+            // case  KEYCODE_S:
+	       	  //   Dance_Xside +=  - 0.0005;
+            //   out_num = KEYCODE_S;
+            // break;
+            // case  KEYCODE_Q:
+	       	  //   Dance_Zside += 0.0005;
+            //   out_num = KEYCODE_Q;
+            // break;
+            // case  KEYCODE_E:
+	       	  //   Dance_Zside +=  - 0.0005;
+            //   out_num = KEYCODE_E;
+            // break;
+            // //===========   跳舞姿态角 dancing orientation command   ============
+            // case  KEYCODE_J:
+	       	  //   Dance_Roll +=  0.0005;
+            //   out_num = KEYCODE_J;
+            // break;
+            // case  KEYCODE_L:
+	       	  //   Dance_Roll +=  -0.0005;
+            //   out_num = KEYCODE_L;
+            // break;
+            // case  KEYCODE_I:
+	       	  //   Dance_Pitch +=   0.0005;
+            //   out_num = KEYCODE_I;
+            // break;
+            // case  KEYCODE_K:
+	       	  //   Dance_Pitch +=  - 0.0005;
+            //   out_num = KEYCODE_K;
+            // break;
+            // case  KEYCODE_U:
+	       	  //   Dance_Yaw +=   0.0005;
+            //   out_num = KEYCODE_U;
+            // break;
+            // case  KEYCODE_O:
+	       	  //   Dance_Yaw +=  - 0.0005;
+            //   out_num = KEYCODE_O;
+            // break;
+
+//==============    跳舞指令 gains tuning    ======================
             case  KEYCODE_A:    
               Dance_Yside =  1;
               Dance_Xside = 0;
@@ -360,6 +457,16 @@ void keyboard_controller::keyboardLoop()
 	       	    Dance_Roll =  0;               
               out_num = KEYCODE_O;
             break;
+
+
+            // =============    停机命令    ==================
+            case    KEYCODE_Esc:
+                Stop=1;
+                out_num = KEYCODE_Esc;
+            break;
+            case    KEYCODE_f:
+                out_num = KEYCODE_f;
+            break;
             default:  
                 Space=Space;
                 Direction=Direction;
@@ -399,4 +506,4 @@ void keyboard_controller::keyboardLoop()
     pub2_.publish(Base_offset);
     
     }  
-}  
+} 

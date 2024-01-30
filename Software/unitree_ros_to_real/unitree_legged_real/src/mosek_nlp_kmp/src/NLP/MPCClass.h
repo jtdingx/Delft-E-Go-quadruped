@@ -10,15 +10,14 @@ Description:	Header file of MPCClass
 */
 #pragma once
 
-//#include "QP/QPBaseClass.h"
 #include "/home/jiatao/Documents/unitree_sdk_hardware_test/go1_remote_control/src/unitree_ros_to_real/unitree_legged_real/src/go1_rt_control/src/QP/QPBaseClass.h"
 #include <iostream>
 #include <Eigen/Dense>
 #include <math.h>
 #include <fstream>
 #include <time.h>
+//#include "/home/pi/go1_catkin/src/unitree_ros_to_real/unitree_legged_real/src/go1_rt_control/src/Robotpara/robot_const_para_config.h"
 #include "/home/jiatao/Documents/unitree_sdk_hardware_test/go1_remote_control/src/unitree_ros_to_real/unitree_legged_real/src/go1_rt_control/src/Robotpara/robot_const_para_config.h"
-// #include "/home/jiatao/unitree_loco_catk/src/unitree_ros/go1_rt_control/src/Robotpara/robot_const_para_config.h"
 
 using namespace Eigen;
 using namespace std;
@@ -29,8 +28,7 @@ using namespace std;
 // const int _nT = round(_tstep/_dt);      /// _tstep/_dt)  the number of one step cycle
 // const int _nstep = 2;                   /// maximal footstep locations where the predictive windwo covers
 // const int _Nt = 5*_nh + 3*_nstep;       /// _Nt = 5*_nh + 3*_nstep;  the number of the variable of the optimization problem
-// const int _nsum = (_footstepsnumber-1)*_nT;
-const int _nsum = 1800;
+///const int _nsum = 1800;
 
 
 class MPCClass : public QPBaseClass
@@ -43,25 +41,30 @@ public:
 	int nsum_x;
 	
 	//void FootStepNumberInputs(int footstepsnumber);
-	void FootStepInputs(double stepwidth, double steplength, double stepheight);	
+	void FootStepInputs(double stepwidth, double steplength, double stepheight, double stepyaw);	
 	void Initialize();
 	int _gait_mode;
-	void Re_Initialize(double step_length_ref, double step_width_ref,Eigen::Matrix<double,18,1> estimated_state);
-	double sx_mod, sy_mod;
+	void Re_Initialize(double step_length_ref, double step_width_ref);
     void config_set();
+	void command_foot_step(double  step_length_keyboard, double step_width_keyboard, double step_yaw_keyboard);
+	Eigen::VectorXd _steptuneflag, _stepyawflag;
+	double _length_key_pre, _width_key_pre, _yaw_key_pre;
+
 	////////////////=================================================//////////////////
 	/// for step timing optimization
-	Eigen::Matrix<double, 40, 1> step_timing_opti_loop(int i,Eigen::Matrix<double,18,1> estimated_state, 
+	Eigen::Matrix<double, 43, 1> step_timing_opti_loop(int i,Eigen::Matrix<double,18,1> estimated_state, 
 													   Eigen::Vector3d _Rfoot_location_feedback, Eigen::Vector3d _Lfoot_location_feedback,
 													   double lamda, bool _stopwalking, int _t_walkdtime,int _t_walkdtime_old,
-													   double step_length_ref, double step_width_ref);
+													   double step_length, double step_width, double step_yaw);
 	void Indexfind(double goalvari, int xyz);
 	void solve_stepping_timing(); 		
 
 	double _lamda_comx;
 	double _lamda_comvx;
 	double _lamda_comy;
-	double _lamda_comvy; 
+	double _lamda_comvy;
+
+	Eigen::Vector3d Homing_p_retarget; 
 	
 	// /// for height +angular momentum + step optimization
 	// Eigen::MatrixXd Matrix_ps(Eigen::MatrixXd a, int nh, Eigen::MatrixXd cxps);
@@ -76,7 +79,7 @@ public:
 	int Get_maximal_number(double dtx);	
 	int Get_maximal_number_reference();
 
-	void CoM_height_solve(int j_index, bool _stopwalking, int ntdx);
+	void CoM_height_solve(int j_indexx, bool _stopwalking, int ntdx);
 	Eigen::Matrix<double, 18, 1> XGetSolution_Foot_rotation(const int walktime, const double dt_sample,int j_index);
 	int right_support;
 	
@@ -91,8 +94,6 @@ public:
 	
 	
 	int _n_loop_omit;	
-	int _n_loop_stop;	
-	int _n_sum_stop;
 	int _j_period;
 	int _j_count;
 	// Eigen::Matrix<double,_footstepsnumber,1> _tx;		///store the the start time of each walkng cycle
@@ -113,7 +114,10 @@ public:
 	void step_timing_constraints(int i);  
 	
 	
-	//parameters declaration  
+	//parameters declaration 
+	double hip_width; 
+	Eigen::VectorXd hip_width_ref, width_ref;
+	Eigen::VectorXd _steplength_yaw, _stepwidth_yaw;
 	// all the variable for step timing optimization
 	//Eigen::Matrix<double,_footstepsnumber,1> _steplength, _stepwidth, _stepheight,_lift_height_ref;
 	//Eigen::Matrix<double,_footstepsnumber,1> _Lxx_ref, _Lyy_ref;  ///reference steplengh and stepwidth
@@ -123,31 +127,48 @@ public:
 	Eigen::VectorXd _Lxx_ref, _Lyy_ref;  ///reference steplengh and stepwidth
 	Eigen::VectorXd _footx_ref, _footy_ref, _footz_ref;    //footstep locations generation
 	Eigen::VectorXd _footx_offline, _footy_offline, _footz_offline;    //footstep locations generation
+	double footx_pre, footy_pre, footz_pre;
+    
+	Eigen::VectorXd _step_yaw;
+	Eigen::VectorXd _yaw_ref;    // footstep locations generation
+	double quadrupedal_width;    // hip width of quadrupedal robot
+	// Eigen::VectorXd _width_quadrupedal;
+    Eigen::Vector3d rotation_angle_solve(int j_index);
+	Eigen::Matrix<double, 12,1> rotation_support_position_solve(int j_index, Eigen::Matrix<double,12,1> suppor_position_estimation);
+	
+	Eigen::Vector3d FR_fixed, FL_fixed, RR_fixed, RL_fixed;
+	Eigen::Vector3d FR_current, FL_current, RR_current, RL_current;
+	Eigen::Vector3d FR_des, FL_des, RR_des, RL_des;
+	//Eigen::Matrix<double,>
+	int _re_initilization =0;
 
         
 	//Eigen::Matrix<double,_footstepsnumber,1> _ts, _td;  //time period of single support and double support
 	Eigen::VectorXd _ts, _td;  //time period of single support and double support		 
-	Eigen::Matrix<double,_nsum,1> _t;	            ///whole sampling time sequence
-
-	Eigen::Matrix<double,1,_nsum> _comx, _comvx, _comax;
-	Eigen::Matrix<double,1,_nsum> _comy, _comvy, _comay;
-	Eigen::Matrix<double,1,_nsum> _comz, _comvz, _comaz;
-	Eigen::Matrix<double,1,_nsum> _Lxx_ref_real, _Lyy_ref_real,_Ts_ref_real; 
 	
+
+	Eigen::Matrix<double,1,100> _comx, _comvx, _comax;
+	Eigen::Matrix<double,1,100> _comy, _comvy, _comay;
+	Eigen::Matrix<double,1,100> _comz, _comvz, _comaz;
+	Eigen::Matrix<double,1,100> _Lxx_ref_real, _Lyy_ref_real,_Ts_ref_real; 
+	Eigen::Matrix<double,1,100> _zmpx_real, _zmpy_real, _dcmx_real,_dcmy_real;
+
 	/// para
 	double _hcom;
 	double _g;	
 	double _Wn;
 	double _Wndt;
 	
-	Eigen::Matrix<double,1,_nsum> _px, _py, _pz;
-	Eigen::Matrix<double,1,_nsum> _zmpvx, _zmpvy;
+	Eigen::Matrix<double,1,100> _px, _py, _pz;
+	Eigen::Matrix<double,1,100> _zmpvx, _zmpvy;
 	// Eigen::Matrix<double,1,_footstepsnumber> _COMx_is, _COMx_es, _COMvx_is;
 	// Eigen::Matrix<double,1,_footstepsnumber> _COMy_is, _COMy_es, _COMvy_is;
 	Eigen::RowVectorXd _COMx_is, _COMx_es, _COMvx_is;
 	Eigen::RowVectorXd _COMy_is, _COMy_es, _COMvy_is;
-	Eigen::Matrix<double,1,_nsum> _comx_feed, _comvx_feed,_comax_feed;
-	Eigen::Matrix<double,1,_nsum> _comy_feed, _comvy_feed,_comay_feed;
+	double _comx_feed, _comvx_feed; //,_comax_feed;
+	double _comy_feed, _comvy_feed; //,_comay_feed;
+	// double _comx_feed_pre,  _comvx_feed_pre, _comax_feed_pre;
+	// double _comy_feed_pre,  _comvy_feed_pre, _comay_feed_pre; 
         
 	//optimal variables
 	Eigen::Matrix<double,8,1> _Vari_ini;
@@ -177,9 +198,6 @@ public:
 	double _det_xa,_det_ya;
 	double _det_xv,_det_yv;
 	double _det_xp,_det_yp;
-	
-	Eigen::Matrix<double,1,_nsum> _tcpu;	
-	
 	
 	
 
@@ -270,23 +288,24 @@ public:
 
 	int _bjxx;	
 	int _bjx1;
-	int _reinit_count;
 	//Eigen::Matrix<double, 3,_footstepsnumber> _footxyz_real;
 	Eigen::MatrixXd _footxyz_real;
 	
-	Eigen::Matrix<double, 1,_nsum> _Lfootx, _Lfooty,_Lfootz, _Lfootvx, _Lfootvy,_Lfootvz, _Lfootax, _Lfootay,_Lfootaz;
-	Eigen::Matrix<double, 1,_nsum> _Rfootx, _Rfooty,_Rfootz, _Rfootvx, _Rfootvy,_Rfootvz, _Rfootax, _Rfootay,_Rfootaz;	
+	double _Lfootx, _Lfooty,_Lfootz, _Lfootvx, _Lfootvy,_Lfootvz, _Lfootax, _Lfootay,_Lfootaz;
+	double _Rfootx, _Rfooty,_Rfootz, _Rfootvx, _Rfootvy,_Rfootvz, _Rfootax, _Rfootay,_Rfootaz;
+	Eigen::Matrix<double, 3,1> _Rfootxyz_pre, _Rfootvxyz_pre, _Rfootaxyz_pre, _Lfootxyz_pre, _Lfootvxyz_pre, _Lfootaxyz_pre;
+
     double _ry_left_right;	
 	
     Eigen::Matrix<double,1,1> _ggg;
-	Eigen::Matrix<double,_nsum,1> _Zsc;
+	Eigen::Matrix<double,100,1> _Zsc;
 
 	///%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 	// other variables for step height+angular optimization
 	///%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
- 	Eigen::Matrix<double,1,2> _zmpx_real, _zmpy_real;
-    Eigen::Matrix<double,1,2> _dcmx_real, _dcmy_real;
+ 	// Eigen::Matrix<double,1,2> _zmpx_real, _zmpy_real;
+    // Eigen::Matrix<double,1,2> _dcmx_real, _dcmy_real;
 
 	int _t_end_footstep;
 	Eigen::Vector3d _Lfoot_r, _Rfoot_r,_Lfoot_rv, _Rfoot_rv,_Lfoot_ra, _Rfoot_ra;		
@@ -294,7 +313,14 @@ public:
     double _tstep;              ///step period
 	double _dt;                //sampling time
 	int _nh = 30;
-	int _footstepsnumber = 30;       //  number of _footstepnumber
+	int _footstepsnumber;       //  number of _footstepnumber
+
+
+	//// reference CoM and foot trajectory in the prediction horizon 
+	Eigen::Matrix<double, 3,10> com_mpc_ref,comv_mpc_ref,rfoot_mpc_ref,lfoot_mpc_ref;
+	Eigen::Matrix<double, 30,1> yaw_mpc_ref;
+	Eigen::Matrix<double, 1,10> support_prediction;
+	Eigen::Matrix<double, 120,1> support_position_mpc_ref;
 
 protected:
 	void Rfooty_plan(int arg1);

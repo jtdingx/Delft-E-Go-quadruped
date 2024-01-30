@@ -36,9 +36,9 @@ Kinematicclass::Kinematicclass()
     FR_leg_offset_y = RR_leg_offset_y = -0.04675;
     FL_leg_offset_y = RL_leg_offset_y = 0.04675;
     FR_thigh_y = -0.08;
-    RR_thigh_y = -0.09;
+    RR_thigh_y = -0.08;
     FL_thigh_y = 0.08;
-    RL_thigh_y = 0.09;
+    RL_thigh_y = 0.08;
     FR_thigh_length = FL_thigh_length = RR_thigh_length = RL_thigh_length =  -0.213;
     FR_calf_length = FL_calf_length = RR_calf_length = RL_calf_length = -0.213;
 
