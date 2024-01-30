@@ -38,13 +38,13 @@ public:
 	virtual ~MPCClass() {};
 
 	bool solve_true;
-	int nsum_x;
+	// int nsum_x;
 	
 	//void FootStepNumberInputs(int footstepsnumber);
 	void FootStepInputs(double stepwidth, double steplength, double stepheight, double stepyaw);	
 	void Initialize();
 	int _gait_mode;
-	void Re_Initialize(double step_length_ref, double step_width_ref);
+	// void Re_Initialize(double step_length_ref, double step_width_ref);
     void config_set();
 	void command_foot_step(double  step_length_keyboard, double step_width_keyboard, double step_yaw_keyboard);
 	Eigen::VectorXd _steptuneflag, _stepyawflag;
@@ -56,7 +56,7 @@ public:
 													   Eigen::Vector3d _Rfoot_location_feedback, Eigen::Vector3d _Lfoot_location_feedback,
 													   double lamda, bool _stopwalking, int _t_walkdtime,int _t_walkdtime_old,
 													   double step_length, double step_width, double step_yaw);
-	void Indexfind(double goalvari, int xyz);
+	// void Indexfind(double goalvari, int xyz);
 	void solve_stepping_timing(); 		
 
 	double _lamda_comx;
@@ -76,18 +76,18 @@ public:
 	
 	////// for trajectory intepolation
 	Eigen::Matrix<double, 18, 1> Foot_trajectory_solve(int j_index, bool _stopwalking);
-	int Get_maximal_number(double dtx);	
-	int Get_maximal_number_reference();
+	// int Get_maximal_number(double dtx);	
+	// int Get_maximal_number_reference();
 
 	void CoM_height_solve(int j_indexx, bool _stopwalking, int ntdx);
 	Eigen::Matrix<double, 18, 1> XGetSolution_Foot_rotation(const int walktime, const double dt_sample,int j_index);
 	int right_support;
 	
-	// current state based on the past one and two actual sampling time;
-	Vector3d XGetSolution_CoM_position(int walktime, double dt_sample, Eigen::Vector3d body_in1, Eigen::Vector3d body_in2, Eigen::Vector3d body_in3);
-	Vector3d XGetSolution_Foot_positionR(int walktime, double dt_sample, Eigen::Vector3d body_in1, Eigen::Vector3d body_in2, Eigen::Vector3d body_in3);
-	Vector3d XGetSolution_Foot_positionL(int walktime, double dt_sample, Eigen::Vector3d body_in1, Eigen::Vector3d body_in2, Eigen::Vector3d body_in3);	
-	Vector3d XGetSolution_body_inclination(int walktime, double dt_sample, Eigen::Vector3d body_in1, Eigen::Vector3d body_in2, Eigen::Vector3d body_in3);		
+	// // current state based on the past one and two actual sampling time;
+	// Vector3d XGetSolution_CoM_position(int walktime, double dt_sample, Eigen::Vector3d body_in1, Eigen::Vector3d body_in2, Eigen::Vector3d body_in3);
+	// Vector3d XGetSolution_Foot_positionR(int walktime, double dt_sample, Eigen::Vector3d body_in1, Eigen::Vector3d body_in2, Eigen::Vector3d body_in3);
+	// Vector3d XGetSolution_Foot_positionL(int walktime, double dt_sample, Eigen::Vector3d body_in1, Eigen::Vector3d body_in2, Eigen::Vector3d body_in3);	
+	// Vector3d XGetSolution_body_inclination(int walktime, double dt_sample, Eigen::Vector3d body_in1, Eigen::Vector3d body_in2, Eigen::Vector3d body_in3);		
 	
 	
 	void File_wl_steptiming();	
@@ -119,15 +119,9 @@ public:
 	Eigen::VectorXd hip_width_ref, width_ref;
 	Eigen::VectorXd _steplength_yaw, _stepwidth_yaw;
 	// all the variable for step timing optimization
-	//Eigen::Matrix<double,_footstepsnumber,1> _steplength, _stepwidth, _stepheight,_lift_height_ref;
-	//Eigen::Matrix<double,_footstepsnumber,1> _Lxx_ref, _Lyy_ref;  ///reference steplengh and stepwidth
-	//Eigen::Matrix<double,_footstepsnumber,1> _footx_ref, _footy_ref, _footz_ref;    //footstep locations generation
-	//Eigen::Matrix<double,_footstepsnumber,1> _footx_offline, _footy_offline, _footz_offline;    //footstep locations generation
 	Eigen::VectorXd _steplength, _stepwidth, _stepheight,_lift_height_ref;
-	Eigen::VectorXd _Lxx_ref, _Lyy_ref;  ///reference steplengh and stepwidth
+	// Eigen::VectorXd _Lxx_ref, _Lyy_ref;  ///reference steplengh and stepwidth
 	Eigen::VectorXd _footx_ref, _footy_ref, _footz_ref;    //footstep locations generation
-	Eigen::VectorXd _footx_offline, _footy_offline, _footz_offline;    //footstep locations generation
-	double footx_pre, footy_pre, footz_pre;
     
 	Eigen::VectorXd _step_yaw;
 	Eigen::VectorXd _yaw_ref;    // footstep locations generation
@@ -144,13 +138,14 @@ public:
 
         
 	//Eigen::Matrix<double,_footstepsnumber,1> _ts, _td;  //time period of single support and double support
-	Eigen::VectorXd _ts, _td;  //time period of single support and double support		 
+	Eigen::VectorXd _ts; 
+	double _td;  //time period of single support and double support		 
 	
 
 	Eigen::Matrix<double,1,100> _comx, _comvx, _comax;
 	Eigen::Matrix<double,1,100> _comy, _comvy, _comay;
 	Eigen::Matrix<double,1,100> _comz, _comvz, _comaz;
-	Eigen::Matrix<double,1,100> _Lxx_ref_real, _Lyy_ref_real,_Ts_ref_real; 
+	// Eigen::Matrix<double,1,100> _Lxx_ref_real, _Lyy_ref_real,_Ts_ref_real; 
 	Eigen::Matrix<double,1,100> _zmpx_real, _zmpy_real, _dcmx_real,_dcmy_real;
 
 	/// para
@@ -161,14 +156,11 @@ public:
 	
 	Eigen::Matrix<double,1,100> _px, _py, _pz;
 	Eigen::Matrix<double,1,100> _zmpvx, _zmpvy;
-	// Eigen::Matrix<double,1,_footstepsnumber> _COMx_is, _COMx_es, _COMvx_is;
-	// Eigen::Matrix<double,1,_footstepsnumber> _COMy_is, _COMy_es, _COMvy_is;
+
 	Eigen::RowVectorXd _COMx_is, _COMx_es, _COMvx_is;
 	Eigen::RowVectorXd _COMy_is, _COMy_es, _COMvy_is;
 	double _comx_feed, _comvx_feed; //,_comax_feed;
 	double _comy_feed, _comvy_feed; //,_comay_feed;
-	// double _comx_feed_pre,  _comvx_feed_pre, _comax_feed_pre;
-	// double _comy_feed_pre,  _comvy_feed_pre, _comay_feed_pre; 
         
 	//optimal variables
 	Eigen::Matrix<double,8,1> _Vari_ini;
@@ -288,7 +280,6 @@ public:
 
 	int _bjxx;	
 	int _bjx1;
-	//Eigen::Matrix<double, 3,_footstepsnumber> _footxyz_real;
 	Eigen::MatrixXd _footxyz_real;
 	
 	double _Lfootx, _Lfooty,_Lfootz, _Lfootvx, _Lfootvy,_Lfootvz, _Lfootax, _Lfootay,_Lfootaz;
@@ -321,6 +312,28 @@ public:
 	Eigen::Matrix<double, 30,1> yaw_mpc_ref;
 	Eigen::Matrix<double, 1,10> support_prediction;
 	Eigen::Matrix<double, 120,1> support_position_mpc_ref;
+
+	///// period flag and time flag
+	Eigen::Vector4d hip_width_ref_flag, width_ref_flag;
+	Eigen::Vector4d _steplength_yaw_flag, _stepwidth_yaw_flag;	
+	Eigen::Vector4d _steplength_flag, _stepwidth_flag, _stepheight_flag, _ts_flag, _td_flag, _tx_flag, yaw_flag, _lift_height_ref_flag;
+	double _bjx1_flag, _bjxx_flag;
+	int index_flag;
+	Eigen::Vector4d period_flag;
+	int _period_i_flag, _period_i_flag_old;
+	int Indexfind_flag(double goalvari, int xyz);
+	Eigen::Vector4d _footx_ref_flag, _footy_ref_flag,_footz_ref_flag;
+	Eigen::Vector4d _Lxx_ref_flag, _Lyy_ref_flag;
+	Eigen::Vector4d _footx_offline_flag, _footy_offline_flag, _footz_offline_flag;
+
+	int period_index_flag, bjx1_index_flag, bjxx_index_flag;
+	Eigen::Vector4d _step_yaw_flag;
+	Eigen::Vector4d _yaw_ref_flag;    // footstep locations generation	
+	Eigen::Matrix<double, 3,4> _footxyz_real_flag;
+	Eigen::Vector4d _steptuneflag_flag, _stepyawflag_flag;
+
+	Eigen::Vector3d _footxyz_real_flag_fixed;
+
 
 protected:
 	void Rfooty_plan(int arg1);

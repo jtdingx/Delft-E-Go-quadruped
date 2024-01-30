@@ -67,8 +67,6 @@ include_directories(
     ${SRC_PATH_rtMPC}
     ${SRC_PATH_lowlevel_MPC}
     /usr/local/include
-    /usr/local/lib
-    /usr/local    
 )
 
 
@@ -127,25 +125,21 @@ add_dependencies(go1_servo_control ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_
 
 #################====================================================
 ########################## for nlp_mosek generation################
-# include_directories(/usr/local/include/osqp)
-# find_package(OsqpEigen REQUIRED)
-
 set(RTControl_DIRS ${SRC_PATH_NLP}/NLPRTControl)
 set(NLP_DIRS ${SRC_PATH_NLP}/NLP)
-# set(pinocchio_DIRS ${SRC_PATH_rtMPC}/pinocchio_dynamics)
+# set(Torquempc_DIRS ${SRC_PATH_NLP}/FORCEMPC_mit)
 add_subdirectory(${SRC_PATH_NLP}/hardware_jump/c)
 include_directories(${cpg_include})
-set(Torquempc_DIRS ${SRC_PATH}/FORCEMPC_mit)
 
 FILE(GLOB SOURCES
-	${RTControl_DIRS}/*.cpp
-	${NLP_DIRS}/*.cpp
+	${RTControl_DIRS}/MpcRTControlClass.cpp
+	${NLP_DIRS}/MPCClass.cpp
 	${SRC_PATH}/Robotpara/robot_const_para_config.cpp
         ${SRC_PATH}/QP/QPBaseClass.cpp
         ${SRC_PATH}/utils/EiQuadProg/EiQuadProg.cpp
         ${SRC_PATH}/utils/Utils.cpp
-        # ${Torquempc_DIRS}/ConvexMpc.cpp
-        ${cpg_head} ${cpg_src}  
+        # ${Torquempc_DIRS}/ConvexMpc.cpp    
+        ${cpg_head} ${cpg_src}    
 )
 add_executable(mosek_nlp_kmp_node ${SRC_PATH_NLP}/gait_nlp_kmp.cpp
                 ${SOURCES}
@@ -163,83 +157,15 @@ add_dependencies(mosek_nlp_kmp_node
    yaml-cpp
 #    OsqpEigen::OsqpEigen
  )
+
+
 ################==============================================####################
-
-
-# ########################### for rt MPC generation################
-# link_directories(/usr/local/lib)
-# set(FASTMPC_DIRS ${SRC_PATH_rtMPC}/FastMPC)
-# set(Torquempc_DIRS ${SRC_PATH_rtMPC}/FORCEMPC_mit)
-# set(mpc_utils_DIRS ${SRC_PATH_rtMPC}/utils)
-
-# set(pinocchio_DIRS ${SRC_PATH_rtMPC}/pinocchio_dynamics)
-# add_subdirectory(${SRC_PATH_rtMPC}/hardware_jump/c)
-# include_directories(${cpg_include})
-
-
-# FILE(GLOB SOURCES
-# 	${FASTMPC_DIRS}/*.cpp
-# 	${SRC_PATH}/Robotpara/robot_const_para_config.cpp
-#         ${SRC_PATH}/QP/QPBaseClass.cpp
-#         ${SRC_PATH}/utils/EiQuadProg/EiQuadProg.cpp
-#         # ${Torquempc_DIRS}/ConvexMpc.cpp
-#         ${mpc_utils_DIRS}/Utils.cpp      
-#         ${cpg_head} ${cpg_src}  
-#         ${pinocchio_DIRS}/pinocchio_model.cpp    
-# )
-
-
-
-# ##### python node ####
-# catkin_install_python(PROGRAMS
-#         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-
-# )
-
-# add_executable(rt_mpc_node ${SRC_PATH_rtMPC}/gait_fast.cpp
-#                 ${SOURCES}
-#                 )
-
-# add_dependencies(rt_mpc_node
-#                 ${${PROJECT_NAME}_EXPORTED_TARGETS}
-#                 ${catkin_EXPORTED_TARGETS}
-#         )
-
-# target_link_libraries(rt_mpc_node
-#         ${${PROJECT_NAME}_EXPORTED_TARGETS}
-#         ${catkin_LIBRARIES}
-#         #${armaLIBRARIES}
-#         yaml-cpp
-#         # OsqpEigen::OsqpEigen
-#         pinocchio::pinocchio        
-#       )
-
-
-# ########################## for LOW-LEVEL MPC control: open-source library################
 # # to find osqp.h
 # include_directories(/usr/local/include/osqp)
 # find_package(OsqpEigen REQUIRED)
-# # Declare cpp libraries
-# # common robot controller every type of robots need
-# add_library(go1_lib
-#         ${SRC_PATH_lowlevel_MPC}/legKinematics/A1Kinematics.h
-#         ${SRC_PATH_lowlevel_MPC}/legKinematics/A1Kinematics.cpp
-#         ${SRC_PATH_lowlevel_MPC}/A1Params.h
-#         ${SRC_PATH_lowlevel_MPC}/A1CtrlStates.h
-#         ${SRC_PATH_lowlevel_MPC}/utils/Utils.cpp
-#         ${SRC_PATH_lowlevel_MPC}/utils/Utils.h
-#         ${SRC_PATH_lowlevel_MPC}/A1RobotControl.cpp
-#         ${SRC_PATH_lowlevel_MPC}/A1RobotControl.h
-#         ${SRC_PATH_lowlevel_MPC}/A1BasicEKF.cpp
-#         ${SRC_PATH_lowlevel_MPC}/A1BasicEKF.h
-#         ${SRC_PATH_lowlevel_MPC}/ConvexMpc.cpp
-#         ${SRC_PATH_lowlevel_MPC}/ConvexMpc.h
-#         )
-# target_link_libraries(go1_lib ${catkin_LIBRARIES} OsqpEigen::OsqpEigen
-# )
 
+# # # Declare a cpp executable
 
-# # Declare a cpp executable
 # add_executable(test_rotation ${SRC_PATH_lowlevel_MPC}/test/test_rotation.cpp
 #         ${SRC_PATH_lowlevel_MPC}/utils/Utils.cpp
 #         ${SRC_PATH_lowlevel_MPC}/utils/Utils.h
@@ -250,12 +176,12 @@ add_dependencies(mosek_nlp_kmp_node
 #         ${SRC_PATH_lowlevel_MPC}/utils/Utils.h
 #         )
 
-# add_executable(test_mpc ${SRC_PATH_lowlevel_MPC}/test/test_mpc.cpp)
-# target_link_libraries(test_mpc
-#         go1_lib
-#         ${catkin_LIBRARIES}
-#         OsqpEigen::OsqpEigen
-#         )
+# # add_executable(test_mpc ${SRC_PATH_lowlevel_MPC}/test/test_mpc.cpp)
+# # target_link_libraries(test_mpc
+# #         go1_lib
+# #         ${catkin_LIBRARIES}
+# #         OsqpEigen::OsqpEigen
+# #         )
 
 
 ##### python node ####

@@ -6,12 +6,12 @@
 #ifndef Go1_CPP_CONVEXMPC_H
 #define Go1_CPP_CONVEXMPC_H
 
-#define EIGEN_STACK_ALLOCATION_LIMIT 0
+//#define EIGEN_STACK_ALLOCATION_LIMIT 0
 
 #include <vector>
 #include <chrono>
 
-// #include "OsqpEigen/OsqpEigen.h"
+#include "OsqpEigen/OsqpEigen.h"
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
 #include <unsupported/Eigen/MatrixFunctions>
@@ -23,6 +23,8 @@
 class ConvexMpc {
 public:
     ConvexMpc(Eigen::VectorXd &q_weights_, Eigen::VectorXd &r_weights_);
+
+    ~ConvexMpc(){};
 
     void reset();
 

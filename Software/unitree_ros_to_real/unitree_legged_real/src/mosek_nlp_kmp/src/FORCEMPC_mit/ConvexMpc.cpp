@@ -1,7 +1,7 @@
 //
 // Created by zixin on 12/09/21.
 //
-#include "OsqpEigen/OsqpEigen.h"
+
 #include "ConvexMpc.h"
 using namespace std;
 
@@ -22,18 +22,6 @@ ConvexMpc::ConvexMpc(Eigen::VectorXd &q_weights_, Eigen::VectorXd &r_weights_) {
     for (int i = 0; i < MPC_STATE_DIM*PLAN_HORIZON; ++i) {
         Q_sparse.insert(i,i) = 2*q_weights_mpc(i);
     }
-
-//    Q.setZero();
-//    R.setZero();
-//
-//    Eigen::Matrix<double, MPC_STATE_DIM, MPC_STATE_DIM> Q_small;
-//    Q_small.setZero();
-//    for (int i = 0; i < MPC_STATE_DIM; ++i) {
-//        Q_small(i, i) = q_weights_[i];
-//    }
-//    for (int i = 0; i < PLAN_HORIZON; ++i) {
-//        Q.block<MPC_STATE_DIM, MPC_STATE_DIM>(MPC_STATE_DIM * i, MPC_STATE_DIM * i) = Q_small;
-//    }
 
     r_weights_mpc.resize(NUM_DOF * PLAN_HORIZON);
     for (int i = 0; i < PLAN_HORIZON; ++i) {

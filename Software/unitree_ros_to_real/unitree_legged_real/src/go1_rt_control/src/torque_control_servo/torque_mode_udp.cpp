@@ -894,7 +894,7 @@ void Quadruped::config_set()
     com_pos_min = config["com_pos_min2"].as<double>();
 
     using_ff = config["using_ff1"].as<double>();
-    uisng_current_jaco = config["uisng_current_jaco1"].as<double>();
+    using_real_jaco = config["using_real_jaco1"].as<double>();
     global_com_feedback = config["global_com_feedback1"].as<double>();
     using_grf_node = config["using_grf_node1"].as<double>();
 
@@ -1842,7 +1842,7 @@ void Quadruped::RobotControl()
     if(gait_mode==102)// Lfoot_location & Rfoot_location
     {
         state_feedback.block<3,1>(19,0) = (FR_foot_mea- FR_foot_Homing + RL_foot_mea -RL_foot_Homing)/2; ////left foot
-        state_feedback.block<3,1>(22,0) = (FL_foot_mea- FL_foot_Homing + RR_foot_mea- RR_foot_Homing)/2; ////right foot
+        state_feedback.block<3,1>(22,0) = (FL_foot_mea- FL_foot_Homing + RR_foot_mea- RR_foot_Homing)/2; ////right foot    
     }
     
     ////these are the real leg position /////
@@ -2712,11 +2712,11 @@ void Quadruped::RobotControl()
                             Dynam.force_opt(body_p_des,FR_foot_des, FL_foot_des, RR_foot_des, RL_foot_des,
                                             F_sum, gait_mode, right_support, y_offset,foot_contact_flag);
 
-                            double alpha = 1;
-                            FR_GRF_opt = (alpha * Dynam.grf_opt.block<3,1>(0,0)) + (1-alpha)  *FR_GRF;
-                            FL_GRF_opt = (alpha * Dynam.grf_opt.block<3,1>(3,0)) + (1-alpha)  *FL_GRF;
-                            RR_GRF_opt = (alpha * Dynam.grf_opt.block<3,1>(6,0)) + (1-alpha)  *RR_GRF;
-                            RL_GRF_opt = (alpha * Dynam.grf_opt.block<3,1>(9,0)) + (1-alpha)  *RL_GRF; 
+                            double alpha = 0.2;
+                            FR_GRF_opt = (alpha * root_rot_mat.transpose() *Dynam.grf_opt.block<3,1>(0,0)) + (1-alpha)  *FR_GRF;
+                            FL_GRF_opt = (alpha * root_rot_mat.transpose() *Dynam.grf_opt.block<3,1>(3,0)) + (1-alpha)  *FL_GRF;
+                            RR_GRF_opt = (alpha * root_rot_mat.transpose() *Dynam.grf_opt.block<3,1>(6,0)) + (1-alpha)  *RR_GRF;
+                            RL_GRF_opt = (alpha * root_rot_mat.transpose() *Dynam.grf_opt.block<3,1>(9,0)) + (1-alpha)  *RL_GRF; 
                         }        
                         
                         ////// smoothing the joint trajectory when starting moving
@@ -2744,19 +2744,19 @@ void Quadruped::RobotControl()
 
 
 
-                        if(uisng_current_jaco>0.5)
+                        if(using_real_jaco>0.5)
                         {
-                            Torque_ff_GRF.block<3,1>(0,0) = - FR_Jaco_est.transpose() *  root_rot_mat.transpose() * FR_GRF_opt;
-                            Torque_ff_GRF.block<3,1>(3,0) = - FL_Jaco_est.transpose() *  root_rot_mat.transpose() * FL_GRF_opt;
-                            Torque_ff_GRF.block<3,1>(6,0) = - RR_Jaco_est.transpose() *  root_rot_mat.transpose() * RR_GRF_opt;
-                            Torque_ff_GRF.block<3,1>(9,0) = - RL_Jaco_est.transpose() *  root_rot_mat.transpose() * RL_GRF_opt;                             
+                            Torque_ff_GRF.block<3,1>(0,0) = - FR_Jaco_est.transpose() *  FR_GRF_opt;
+                            Torque_ff_GRF.block<3,1>(3,0) = - FL_Jaco_est.transpose() *  FL_GRF_opt;
+                            Torque_ff_GRF.block<3,1>(6,0) = - RR_Jaco_est.transpose() *  RR_GRF_opt;
+                            Torque_ff_GRF.block<3,1>(9,0) = - RL_Jaco_est.transpose() *  RL_GRF_opt;                             
                         }
                         else
                         {
-                            Torque_ff_GRF.block<3,1>(0,0) = - FR_Jaco.transpose() *  root_rot_mat.transpose() * FR_GRF_opt;
-                            Torque_ff_GRF.block<3,1>(3,0) = - FL_Jaco.transpose() *  root_rot_mat.transpose() * FL_GRF_opt;
-                            Torque_ff_GRF.block<3,1>(6,0) = - RR_Jaco.transpose() *  root_rot_mat.transpose() * RR_GRF_opt;
-                            Torque_ff_GRF.block<3,1>(9,0) = - RL_Jaco.transpose() *  root_rot_mat.transpose() * RL_GRF_opt; 
+                            Torque_ff_GRF.block<3,1>(0,0) = - FR_Jaco.transpose() *  FR_GRF_opt;
+                            Torque_ff_GRF.block<3,1>(3,0) = - FL_Jaco.transpose() *  FL_GRF_opt;
+                            Torque_ff_GRF.block<3,1>(6,0) = - RR_Jaco.transpose() *  RR_GRF_opt;
+                            Torque_ff_GRF.block<3,1>(9,0) = - RL_Jaco.transpose() *  RL_GRF_opt; 
                         }
 
                         break;
@@ -2904,7 +2904,7 @@ void Quadruped::RobotControl()
                             {
                             torque_err_intergration(j,0) += torque_err(ij,j);
                             }                             
-                            torque(j,0) = (qDes[j] - RecvLowROS.motorState[j].q)*torq_kp_thigh + (0 - RecvLowROS.motorState[j].dq)*torq_kd_thigh + torque_err_intergration(j,0)*torq_ki_thigh;                           
+                            // torque(j,0) = (qDes[j] - RecvLowROS.motorState[j].q)*torq_kp_thigh + (0 - RecvLowROS.motorState[j].dq)*torq_kd_thigh + torque_err_intergration(j,0)*torq_ki_thigh;                           
                             // joint-level ff control
                             if((gait_status == DYNAMIC_STATUS)||(gait_status == STAND_UP_STATUS))
                             {
@@ -2939,7 +2939,7 @@ void Quadruped::RobotControl()
                             {
                                 torque_err_intergration(j,0) += torque_err(ij,j);
                             }                             
-                            torque(j,0) = (qDes[j] - RecvLowROS.motorState[j].q)*torq_kp_calf + (0 - RecvLowROS.motorState[j].dq)*torq_kd_calf + torque_err_intergration(j,0)*torq_ki_calf;                           
+                            // torque(j,0) = (qDes[j] - RecvLowROS.motorState[j].q)*torq_kp_calf + (0 - RecvLowROS.motorState[j].dq)*torq_kd_calf + torque_err_intergration(j,0)*torq_ki_calf;                           
                             //// joint-level ff control
                             if((gait_status == DYNAMIC_STATUS)||(gait_status == STAND_UP_STATUS))
                             {
@@ -2992,8 +2992,16 @@ void Quadruped::RobotControl()
                         }
                         else
                         {
+                            if(using_real_jaco>0.5)
+                            {
                             FR_torque_impedance = (FR_Jaco_est.transpose() * (swing_kp*(FR_foot_relative_des - FR_foot_relative_mea) 
                                                                                 + swing_kd*(FR_v_relative - FR_v_est_relative)));
+                            }
+                            else
+                            {
+                            FR_torque_impedance = (FR_Jaco.transpose() * (swing_kp*(FR_foot_relative_des - FR_foot_relative_mea) 
+                                                                                + swing_kd*(FR_v_relative - FR_v_est_relative)));                                
+                            }
                         }
                         if(!FL_swing)
                         {
@@ -3001,8 +3009,16 @@ void Quadruped::RobotControl()
                         }
                         else
                         {      
+                            if(using_real_jaco>0.5)
+                            {
                             FL_torque_impedance = (FL_Jaco_est.transpose() * (swing_kp*(FL_foot_relative_des - FL_foot_relative_mea) 
                                                                                 + swing_kd*(FL_v_relative - FL_v_est_relative)));
+                            }
+                            else
+                            {
+                            FL_torque_impedance = (FL_Jaco.transpose() * (swing_kp*(FL_foot_relative_des - FL_foot_relative_mea) 
+                                                                                + swing_kd*(FL_v_relative - FL_v_est_relative)));                                
+                            }
                         }
                         if(!RR_swing)
                         {
@@ -3010,8 +3026,16 @@ void Quadruped::RobotControl()
                         }
                         else
                         { 
+                            if(using_real_jaco>0.5)
+                            {                            
                             RR_torque_impedance = (RR_Jaco_est.transpose() * (swing_kp*(RR_foot_relative_des - RR_foot_relative_mea) 
-                                                                                + swing_kd*(RR_v_relative - RR_v_est_relative)));                    
+                                                                                + swing_kd*(RR_v_relative - RR_v_est_relative)));  
+                            }
+                            else
+                            {
+                            RR_torque_impedance = (RR_Jaco.transpose() * (swing_kp*(RR_foot_relative_des - RR_foot_relative_mea) 
+                                                                                + swing_kd*(RR_v_relative - RR_v_est_relative)));                                  
+                            }                  
                         }
                         if(!RL_swing)
                         {
@@ -3019,8 +3043,18 @@ void Quadruped::RobotControl()
                         }
                         else
                         { 
+                            if(using_real_jaco>0.5)
+                            {                              
                             RL_torque_impedance = (RL_Jaco_est.transpose() * (swing_kp*(RL_foot_relative_des - RL_foot_relative_mea) 
                                                                                 + swing_kd*(RL_v_relative - RL_v_est_relative)));
+                            }
+                            else
+                            {
+                            RL_torque_impedance = (RL_Jaco.transpose() * (swing_kp*(RL_foot_relative_des - RL_foot_relative_mea) 
+                                                                                + swing_kd*(RL_v_relative - RL_v_est_relative)));                                
+                            }
+
+
                         }                                                                                                               
                         Legs_torque.block<3,1>(0,0) = FR_torque_impedance;
                         Legs_torque.block<3,1>(3,0) = FL_torque_impedance;
@@ -3065,12 +3099,17 @@ void Quadruped::RobotControl()
                 
                 }
 
-                ////// Gravity+coriolis force////////
-                torque.block<3,1>(0,0) +=  (torque_bias.block<3,1>(3,0));
-                torque.block<3,1>(3,0) +=  (torque_bias.block<3,1>(0,0));
-                torque.block<3,1>(6,0) +=  (torque_bias.block<3,1>(9,0));
-                torque.block<3,1>(9,0) +=  (torque_bias.block<3,1>(6,0));
+                // ////// Gravity+coriolis force////////
+                // torque.block<3,1>(0,0) +=  (torque_bias.block<3,1>(3,0));
+                // torque.block<3,1>(3,0) +=  (torque_bias.block<3,1>(0,0));
+                // torque.block<3,1>(6,0) +=  (torque_bias.block<3,1>(9,0));
+                // torque.block<3,1>(9,0) +=  (torque_bias.block<3,1>(6,0));
 
+
+                torque(0,0) +=  -0.9; ///FR
+                torque(3,0) +=  0.9; /// FL
+                torque(6,0) +=  -0.9; // RR
+                torque(9,0) +=  0.9; //RL
 
                 ///// joint torque filtering&clamp//////////////////////////////////////
                 torque_ff(0,0)  = butterworthLPF19.filter(torque(0,0));
@@ -3116,7 +3155,7 @@ void Quadruped::RobotControl()
             //    // SendLowROS.motorCmd[j].tau = 0;     ///for rest length measurement  
                 ////// joint-level + toruqe
                 SendLowROS.motorCmd[j].q = qDes[j];
-                SendLowROS.motorCmd[j].dq = dqDes[j];
+                SendLowROS.motorCmd[j].dq = 0;
                 SendLowROS.motorCmd[j].Kp = Kp_joint[j];
                 SendLowROS.motorCmd[j].Kd = Kd_joint[j];
                 if(using_ff>0.5)

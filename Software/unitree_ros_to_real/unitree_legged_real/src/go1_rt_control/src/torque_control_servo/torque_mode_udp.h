@@ -544,7 +544,7 @@ class Quadruped{
 
     void config_set();
     double com_rpy_max,com_rpy_min,com_pos_max,com_pos_min;
-    double uisng_current_jaco;
+    double using_real_jaco;
     double using_ff;
     double global_com_feedback;
     double start_grf;

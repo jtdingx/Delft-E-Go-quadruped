@@ -62,8 +62,8 @@ MpcRTControlClass::MpcRTControlClass()
   mpc.Initialize();
     
   
-  _refer_t_max = mpc.Get_maximal_number_reference();
-  cout<<"_refer_t_max"<<_refer_t_max<<endl;
+  // _refer_t_max = mpc.Get_maximal_number_reference();
+  // cout<<"_refer_t_max"<<_refer_t_max<<endl;
 
  _t_int = 0;
   _t_walkdtime_flag = 0;
@@ -75,7 +75,8 @@ MpcRTControlClass::MpcRTControlClass()
  
   // loop numbern generation
   _dtx = dt_mpc;    
-  _walkdtime_max = mpc.Get_maximal_number(_dtx);
+  // _walkdtime_max = mpc.Get_maximal_number(_dtx);
+    _walkdtime_max = 1000000000;//// as large as possible
   _wal_max = _walkdtime_max;
   cout<<"_walkdtime_max"<<_walkdtime_max<<endl;
   
@@ -151,6 +152,14 @@ MpcRTControlClass::MpcRTControlClass()
 
   n_time_set = round(gait::time_set/dt_mpc);
 
+
+  _bjx1_nlp = 0;
+  _bjxx_nlp = 0;
+  _bjx1_nlp_flag = 0;
+  _bjxx_nlp_flag = 0;
+  _period_i_nlp = 0;
+  _period_i_nlp_flag = 0;  
+
 }
 
 
@@ -160,8 +169,8 @@ Eigen::Matrix<double,100,1> MpcRTControlClass::WalkingReactStepping(int walkdtim
 
 {
   /// update the maximal clock number;
-  _walkdtime_max = mpc.Get_maximal_number(_dtx);
-
+  // _walkdtime_max = mpc.Get_maximal_number(_dtx);
+  _walkdtime_max = 1000000000;
 
 
 	_walkdtime1 = walkdtime;
@@ -174,8 +183,6 @@ Eigen::Matrix<double,100,1> MpcRTControlClass::WalkingReactStepping(int walkdtim
     {
       j_count = 1;
       bjx1 = 1;
-      tx = 1;
-      td = 0;
     }
     else
     {
@@ -267,16 +274,20 @@ Eigen::Matrix<double,100,1> MpcRTControlClass::WalkingReactStepping(int walkdtim
 
           j_count = mpc._j_count;
           bjx1 = mpc._bjx1;
-          if (bjx1>=1)
-          {		    
-            tx = mpc._tx(bjx1-1);
-            td = mpc._td(bjx1-1);			  
-          }
-          else
-          {		    
-            tx = 0;
-            td = 0;			  
-          }
+
+          _bjx1_nlp = mpc._bjx1;
+          _bjxx_nlp = mpc._bjxx;
+          _bjx1_nlp_flag = mpc._bjx1_flag;
+          _bjxx_nlp_flag = mpc._bjxx_flag;
+          _period_i_nlp = mpc._period_i;
+          _period_i_nlp_flag = mpc._period_i_flag;          
+
+          if(_t_walkdtime_restart_flag>_t_walkdtime_flag)
+          {
+            cout<<"==================time index for reinitialization:"<<_t_int<<endl;
+            // mpc.Re_Initialize(step_length,step_width);
+          } 
+
           _t_walkdtime_flag = _t_walkdtime_restart_flag;////last count
           //// recycling:
           if(_walkdtime1 == (_walkdtime_max))  ///update the position
@@ -294,7 +305,10 @@ Eigen::Matrix<double,100,1> MpcRTControlClass::WalkingReactStepping(int walkdtim
               zmp_old(1) = zmp_ref(1);
               dcm_old(0) = dcm_ref(0);
               dcm_old(1) = dcm_ref(1);              
-          }          
+          }
+
+
+
 	      }
     }
 
@@ -302,10 +316,7 @@ Eigen::Matrix<double,100,1> MpcRTControlClass::WalkingReactStepping(int walkdtim
 	else
 	{
 		j_count = 1;
-		bjx1 = 1;
-		
-		tx = 1;
-		td = 0;			
+		bjx1 = 1;	
 	}
 	
     _state_generate_interpo(0,0) = PelvisPos(0);
@@ -475,7 +486,8 @@ void MpcRTControlClass::config_set()
     RobotPara_Tstep = config["t_period"].as<double>();
     RobotPara_Z_C = config["body_p_Homing_Retarget2"].as<double>(); 
     RobotPara_totalmass = config["total_mass"].as<double>(); 
-    RobotPara_footstepsnumber = config["footnumber"].as<double>(); 
+    // RobotPara_footstepsnumber = config["footnumber"].as<double>(); 
+    RobotPara_footstepsnumber = 10; ///fixed this 
     std::cout<<"dt_mpc:"<<dt_mpc<<std::endl;
 }
 

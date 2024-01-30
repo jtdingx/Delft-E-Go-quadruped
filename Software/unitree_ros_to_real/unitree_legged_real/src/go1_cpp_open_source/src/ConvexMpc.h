@@ -5,7 +5,7 @@
 #ifndef A1_CPP_CONVEXMPC_H
 #define A1_CPP_CONVEXMPC_H
 
-#define EIGEN_STACK_ALLOCATION_LIMIT 0
+// #define EIGEN_STACK_ALLOCATION_LIMIT 0
 
 #include <vector>
 #include <chrono>

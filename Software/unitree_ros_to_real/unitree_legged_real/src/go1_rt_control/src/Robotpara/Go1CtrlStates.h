@@ -34,7 +34,7 @@ public:
         root_lin_vel_d.setZero();
         root_ang_vel_d.setZero();
 
-        robot_mass = 13.0;
+        robot_mass = 15.0;
         Go1_trunk_inertia << 0.0158533, 0.0, 0.0,
                 0.0, 0.0377999, 0.0,
                 0.0, 0.0, 0.0456542;

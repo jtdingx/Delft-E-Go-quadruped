@@ -46,24 +46,35 @@ public:
         q_weights.resize(13);
         r_weights.resize(12);
 
-        // q_weights << 10.0, 10.0, 1000.0,
-        //         20000.0, 20000.0, 20000.0,
-        //         10.0, 10.0, 200.0,
-        //         100.0, 100.0, 100.0,
-        //         0.0;
 
-        q_weights << 1.0, 1.0, 1000.0,
-                1.0, 1.0, 20000.0,
-                10.0, 10.0, 2000.0,
-                10000.0, 10000.0, 10000.0,
-                0.0;
+        //// too much body inclination
+        // q_weights << 10.0, 10.0, 1000.0,
+        //         10.0, 10.0, 20000.0,
+        //         100.0, 100.0, 2000.0,
+        //         10000.0, 10000.0, 10000.0,
+        //         0.0; ///// theta_r, theta_p, theta_y, x, y, z,omega_r, omega_p, omega_y, vel_x, vel_y, vel_z, gravity;
+        
+        // //// tstep = 0.3
+        // q_weights << 100.0, 100.0, 1000.0,
+        //         100.0, 100.0, 1000.0,
+        //         1000.0, 1000.0, 5000.0,
+        //         100.0, 100.0, 1000.0,
+        //         0.0; ///// theta_r, theta_p, theta_y, x, y, z,omega_r, omega_p, omega_y, vel_x, vel_y, vel_z, gravity;
+
+        //// tstep = 0.25
+        q_weights << 1000.0, 1000.0, 10000.0,
+                1000.0, 1000.0, 10000.0,
+                100.0, 100.0, 5000.0,
+                5000.0, 5000.0, 5000.0,
+                0.0; ///// theta_r, theta_p, theta_y, x, y, z,omega_r, omega_p, omega_y, vel_x, vel_y, vel_z, gravity;
+
 
         r_weights << 5e-5, 5e-5, 1e-5,
                 5e-5, 5e-5, 1e-5,
                 5e-5, 5e-5, 1e-5,
                 5e-5, 5e-5, 1e-5;
         
-        r_weights *=1000;
+        r_weights *=5000;
 
         root_pos.setZero();
         root_quat.setIdentity();

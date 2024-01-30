@@ -105,6 +105,7 @@ namespace UNITREE_LEGGED_SDK
 		uint8_t wirelessRemote[40];        // wireless commands
 		uint32_t reserve;
 		uint32_t crc;
+		Cartesian Car_position;
 	} LowState;                            // low level feedback
 
 	typedef struct 

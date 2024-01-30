@@ -14,19 +14,47 @@ using_ekf: 1       #### ekf as state estimator
 fz_limit_ekf: 200
 
 ####################### controller ###########################3
+# ##### joint tracking controller
+# Kp_joint_retarget0: 60
+# Kp_joint_retarget1: 60
+# Kp_joint_retarget2: 60
+# Kp_joint_retarget3: 60
+# Kp_joint_retarget4: 60
+# Kp_joint_retarget5: 60
+# Kp_joint_retarget6: 60
+# Kp_joint_retarget7: 60
+# Kp_joint_retarget8: 60
+# Kp_joint_retarget9: 60
+# Kp_joint_retarget10: 60
+# Kp_joint_retarget11: 60
+
+# Kd_joint_retarget0: 1
+# Kd_joint_retarget1: 1.5
+# Kd_joint_retarget2: 1.5
+# Kd_joint_retarget3: 1
+# Kd_joint_retarget4: 1.5
+# Kd_joint_retarget5: 1.5
+# Kd_joint_retarget6: 1
+# Kd_joint_retarget7: 1.5
+# Kd_joint_retarget8: 1.5
+# Kd_joint_retarget9: 1
+# Kd_joint_retarget10: 1.5
+# Kd_joint_retarget11: 1.5
+
+
 ##### joint tracking controller
-Kp_joint_retarget0: 60
-Kp_joint_retarget1: 60
-Kp_joint_retarget2: 60
-Kp_joint_retarget3: 60
-Kp_joint_retarget4: 60
-Kp_joint_retarget5: 60
-Kp_joint_retarget6: 60
-Kp_joint_retarget7: 60
-Kp_joint_retarget8: 60
-Kp_joint_retarget9: 60
-Kp_joint_retarget10: 60
-Kp_joint_retarget11: 60
+Kp_joint_retarget0: 40
+Kp_joint_retarget1: 40
+Kp_joint_retarget2: 40
+Kp_joint_retarget3: 40
+Kp_joint_retarget4: 40
+Kp_joint_retarget5: 40
+Kp_joint_retarget6: 40
+Kp_joint_retarget7: 40
+Kp_joint_retarget8: 40
+Kp_joint_retarget9: 40
+Kp_joint_retarget10: 40
+Kp_joint_retarget11: 40
 
 Kd_joint_retarget0: 1
 Kd_joint_retarget1: 1.5
@@ -57,16 +85,16 @@ Kd_joint_retarget11: 1.5
 # kdw2: 2
 
 ####
-kpp0: 10
-kpp1: 10
-kpp2: 10
+kpp0: 20
+kpp1: 20
+kpp2: 20
 #### small one with ekf estimator
 kdp0: 0.1
 kdp1: 0.1
 kdp2: 0.1
 
-kpw0: 10
-kpw1: 10
+kpw0: 20
+kpw1: 20
 kpw2: 20 ###large==vibration
 kdw0: 0.1
 kdw1: 0.1
@@ -157,9 +185,9 @@ com_rpy_min2: -0.005
 
 ##########################==== control logic ====//////////////////////////////
 ###### controller mode
-uisng_current_jaco1: 1  ####using estimated Jacobian
-using_ff1: 1          ####using feedfoward torque
-enable_spring: 1        #### engage springs
+using_real_jaco1: 0  ####using estimated Jacobian
+using_ff1: 1            ####using feedfoward torque
+enable_spring: 0        #### engage springs
 global_com_feedback1: 0 ####tracking global CoM /// shouldn't track the global com when walking ///// 
 switch_support1: 1     #### should be 1 when not using ekf works when tracking the relative state, i.e, global_com_feedback1 and tracking_global_foot are 0
 
@@ -178,7 +206,7 @@ dt_rt_loop1: 0.002
 
 #### com filter#############
 fcut_off11: 3
-fcut_off21: 5
+fcut_off21: 7
 fcut_off31: 20
 ###CoM velocity filter for acceleration feedback
 fcut_off51: 20 
@@ -199,7 +227,7 @@ use_terrain_adapt: 0 ###terrain adaptation when computing GRF;
 
 ##### gait parameters###########################################
 ##### body pose homing pose ####
-body_p_Homing_Retarget0: 0.01
+body_p_Homing_Retarget0: 0.03
 body_p_Homing_Retarget1: 0
 body_p_Homing_Retarget2: 0.3
 body_r_Homing_Retarget0: 0
@@ -209,13 +237,12 @@ body_r_Homing_Retarget2: 0.000 #### set to be zeros with lateral motion, 0.005 w
 
 ##########################===============//////////////////////////////
 ##### gait parameters ####
-footnumber: 100
 dt_slow_mpc: 0.01
-step_length: 0.0  # energy_efficiency test: 0.01, 0.03, 0.05, 0.07(test) 
+step_length: 0.00  # energy_efficiency test: 0.01, 0.03, 0.05, 0.07(test) 
 step_width: 0  ## lateral motion: x 0.05, y -0.01
 step_height: 0
-foot_clear_height: 0.06
-t_period: 0.3 ###step period: normal; 0.3, 
+foot_clear_height: 0.05
+t_period: 0.25 ###step period: normal; 0.3, 
 total_mass: 13
 using_hie_using: 0 ###using the rt_mpc data //// here we do not use the rt_mpc 
 

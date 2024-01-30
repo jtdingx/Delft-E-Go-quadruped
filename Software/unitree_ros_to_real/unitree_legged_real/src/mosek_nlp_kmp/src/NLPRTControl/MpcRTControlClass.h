@@ -39,7 +39,7 @@ class MpcRTControlClass
 	
 
 		int _walkdtime_max, _wal_max;	
-		int _refer_t_max;
+		// int _refer_t_max;
 		int n_time_set;
 
 		Eigen::Vector3d PelvisPos,LeftFootPosx,RightFootPosx, comxyzx, thetaxyx, Lfootxyzx, Rfootxyzx;
@@ -65,6 +65,9 @@ class MpcRTControlClass
 		Eigen::Matrix<double, 10,1> support_prediction;
 		Eigen::Matrix<double, 30,1> yaw_mpc_ref;
 		Eigen::Matrix<double, 120, 1> support_position_mpc_ref;
+
+		/// display the step number //////////
+		int _bjx1_nlp, _bjxx_nlp, _bjx1_nlp_flag, _bjxx_nlp_flag, _period_i_nlp, _period_i_nlp_flag;
 
 
 	
