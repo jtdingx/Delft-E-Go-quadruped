@@ -59,6 +59,7 @@ double step_length;
 double step_width;
 double step_yaw;
 double step_yaw_old;
+double state_alpha;
 
 Matrix<double,100,1> nlp_gait_result;
 
@@ -348,7 +349,7 @@ void mpc_update_parameters(Go1CtrlStates &state, Eigen::Matrix<double,3,10> com_
     // A_pred_mpc.block(0,0,6,12) = A; //// current A matrix; ????????????????????
     /// current state initialization ????????????? or global state? ///// 
     x_init << state.root_pos, state.root_euler, state.root_lin_vel, state.root_ang_vel;
-    // x_init.block<3,1>(0,0) -= (state_feedback.block<3,1>(37,0)+state_feedback.block<3,1>(40,0)+state_feedback.block<3,1>(43,0)+state_feedback.block<3,1>(46,0))/4; 
+    
     ///the com to the current support center help to increase the MPC stability, but may degrade the tracking performance///
     for (int i = 0; i < mpc_horizon; i++)
     {
@@ -438,192 +439,6 @@ void mpc_solve(Eigen::Matrix<double, 12,1>& F_GRF){
   F_GRF(9,0) =  std::min(std::max(F_GRF(9,0), -0.7* F_GRF(11,0)),0.7* F_GRF(11,0));
   F_GRF(10,0) =  std::min(std::max(F_GRF(10,0), -0.7* F_GRF(11,0)),0.7* F_GRF(11,0));  
 }
-
-
-
-
-
-// ////// function for MIT convex MPC ////
-// ConvexMpc mpc_solver = ConvexMpc(state.q_weights, state.r_weights);
-
-
-
-// Eigen::Matrix<double, 12, 1> force_mpc(Go1CtrlStates &state, Eigen::Matrix<double,3,10> com_mpc_ref, Eigen::Matrix<double,3,10> comv_mpc_ref, Eigen::Matrix<double,120,1> support_position, Eigen::Matrix<double,30,1> yaw_ref, Eigen::Matrix<double,3,10> rfoot, Eigen::Matrix<double,3,10> lfoot, double right_support)
-// {
-//   ///cout<<"enter force---MPC force loop"<<endl;
-//   Eigen::Matrix<double, 12, 1> foot_forces_grf;
-//   if(!mpc_solver.mpc_reset)
-//   {
-//     mpc_solver.reset();
-//     mpc_solver_declar = true;
-//   }  
-//   ///=========== current states: should be the real ones, but we here use the reference for testing ====================
-//   ///===use the reference for testing but we here use the reference for testing====////
-//   state.mpc_states << state.root_euler[0], state.root_euler[1], state.root_euler[2],
-//           state.root_pos[0], state.root_pos[1], state.root_pos[2],
-//           state.root_ang_vel[0], state.root_ang_vel[1], state.root_ang_vel[2],
-//           state.root_lin_vel[0], state.root_lin_vel[1], state.root_lin_vel[2],
-//           -9.8;
-//   // initialize the desired mpc states trajectory
-//   //state.root_lin_vel_d_world = state.root_rot_mat * state.root_lin_vel_d;
-//   for (int i = 0; i < PLAN_HORIZON; ++i) {
-//       // state.mpc_states_d.segment(i * 13, 13)
-//       //         <<
-//       //         state.root_euler_d[0],
-//       //         state.root_euler_d[1],
-//       //         state.root_euler[2] + state.root_ang_vel_d[2] * dt_mpc * (i + 1),
-//       //         state.root_pos[0] + state.root_lin_vel_d_world[0] * dt_mpc * (i + 1),
-//       //         state.root_pos[1] + state.root_lin_vel_d_world[1] * dt_mpc * (i + 1),
-//       //         state.root_pos[2],
-//       //         state.root_ang_vel_d[0],
-//       //         state.root_ang_vel_d[1],
-//       //         state.root_ang_vel_d[2],
-//       //         state.root_lin_vel_d_world[0],
-//       //         state.root_lin_vel_d_world[1],
-//       //         0,
-//       //         -9.8;
-//       //cout<<"enter state for MPC force loop"<<endl; 
-//       //cout<<"yaw_ref(3*(i-1),0)"<<yaw_ref(3*(i-1),0)<<endl;
-//       // ////// real-time planner: desired gait trajectory
-//       state.mpc_states_d.segment(i * 13, 13)
-//               <<
-//               0,
-//               0,
-//               yaw_ref(3*i,0),
-//               com_mpc_ref(0,i),
-//               com_mpc_ref(1,i),
-//               com_mpc_ref(2,i),
-//               0,
-//               0,
-//               yaw_ref(3*i+1,0),
-//               comv_mpc_ref(0,i),
-//               comv_mpc_ref(1,i),
-//               comv_mpc_ref(2,i),
-//               -9.8;
-//   }
-//   //cout<<"initialize state for MPC force loop"<<endl; 
-//   // a single A_c is computed for the entire reference trajectory
-//   //auto t1 = std::chrono::high_resolution_clock::now();
-//   Eigen::Matrix<double,PLAN_HORIZON,1> yaw_ref_angle;
-//   for(int i=0; i<PLAN_HORIZON;i++)
-//   {
-//     yaw_ref_angle(i) = yaw_ref(3*(i));
-//   }
-//   Eigen::Vector3d avg_root_euler_in_horizon;
-//   avg_root_euler_in_horizon
-//           <<
-//           0,
-//           0,
-//           (state.root_euler[2] + yaw_ref_angle.sum()) / (PLAN_HORIZON + 1);
-//   double cos_yaw = cos(avg_root_euler_in_horizon[2]);
-//   double sin_yaw = sin(avg_root_euler_in_horizon[2]);
-//   ////// update Rz
-//   state.root_rot_mat << cos_yaw, -sin_yaw, 0,
-//                          sin_yaw, cos_yaw, 0,
-//                               0,       0, 1;  
-//   state.root_rot_mat_z =  state.root_rot_mat;                                 
-//   mpc_solver.calculate_A_mat_c(avg_root_euler_in_horizon);
-//   //cout<<"calculate_A_mat_c"<<endl; 
-//   ////desired support leg
-//   if(right_support==0) ///left support
-//   {
-//     state.contacts[0] = true;
-//     state.contacts[3] = true; 
-//     state.contacts[1] = false;
-//     state.contacts[2] = false;       
-//   }
-//   else
-//   {
-//   ////
-//     if(right_support==1) ///right support
-//     {
-//       state.contacts[1] = true;
-//       state.contacts[2] = true; 
-//       state.contacts[0] = false;
-//       state.contacts[3] = false;       
-//     } 
-//     else
-//     {
-//       state.contacts[0] = true;
-//       state.contacts[3] = true; 
-//       state.contacts[1] = true;
-//       state.contacts[2] = true; 
-//     }   
-//   }
-//   // for each point in the reference trajectory, an approximate B_c matrix is computed using desired values of euler angles and feet positions
-//   // from the reference trajectory and foot placement controller
-//   // state.foot_pos_abs_mpc = state.foot_pos_abs;
-//   //auto t2 = std::chrono::high_resolution_clock::now();
-//   Eigen::Vector3d foot_position_to_com;
-//   for (int i = 0; i < PLAN_HORIZON; i++) {
-//       ////note that we update the foot position in the prediction window;
-//       //// foot_pos_abs//// foot position relative to body center!!!!
-//       ///FR2COM
-//       foot_position_to_com = support_position.block<3,1>(12*(i),0) + lfoot.block<3,1>(0,i) - com_mpc_ref.block<3,1>(0,i) - body_p_Homing_Retarget;
-//       state.foot_pos_abs.block<3,1>(0,1) = foot_position_to_com;
-//       ///FL2COM
-//       foot_position_to_com = support_position.block<3,1>(12*(i)+3,0) + rfoot.block<3,1>(0,i) - com_mpc_ref.block<3,1>(0,i)- body_p_Homing_Retarget;
-//       state.foot_pos_abs.block<3,1>(0,0) = foot_position_to_com;
-//       ///RR2COM
-//       foot_position_to_com = support_position.block<3,1>(12*(i)+6,0) + rfoot.block<3,1>(0,i) - com_mpc_ref.block<3,1>(0,i) - body_p_Homing_Retarget;
-//       state.foot_pos_abs.block<3,1>(0,3) = foot_position_to_com;
-//       ///RL2COM
-//       foot_position_to_com = support_position.block<3,1>(12*(i)+9,0) + lfoot.block<3,1>(0,i) - com_mpc_ref.block<3,1>(0,i) - body_p_Homing_Retarget;
-//       state.foot_pos_abs.block<3,1>(0,2) = foot_position_to_com;
-//       mpc_solver.calculate_B_mat_c(state.robot_mass,
-//                                     state.Go1_trunk_inertia,
-//                                     state.root_rot_mat,
-//                                     state.foot_pos_abs);
-//       // state space discretization, calculate A_d and current B_d
-//       mpc_solver.state_space_discretization(dt_mpc);
-//       // store current B_d matrix
-//       mpc_solver.B_mat_d_list.block<13, 12>(i * 13, 0) = mpc_solver.B_mat_d;
-//   }
-//   //cout<<"B_mat_d_list"<<endl; 
-//   // calculate QP matrices
-//   //auto t3 = std::chrono::high_resolution_clock::now();
-//   mpc_solver.calculate_qp_mats(state);
-//   // solve
-//   OsqpEigen::Solver solver;
-//   auto t4 = std::chrono::high_resolution_clock::now();
-//   if (!solver.isInitialized()) {
-//       solver.settings()->setVerbosity(false);
-//       solver.settings()->setWarmStart(true);
-//       solver.data()->setNumberOfVariables(NUM_DOF * PLAN_HORIZON);
-//       solver.data()->setNumberOfConstraints(MPC_CONSTRAINT_DIM * PLAN_HORIZON);
-//       solver.data()->setLinearConstraintsMatrix(mpc_solver.linear_constraints);
-//       solver.data()->setHessianMatrix(mpc_solver.hessian);
-//       solver.data()->setGradient(mpc_solver.gradient);
-//       solver.data()->setLowerBound(mpc_solver.lb);
-//       solver.data()->setUpperBound(mpc_solver.ub);
-//       solver.initSolver();
-//       // std::cout << "mpc_solver_initial start:"<<std::endl;
-//       // std::cout << "mpc_solver.hessian:"<< mpc_solver.hessian<<std::endl;
-//       // std::cout << "mpc_solver.gradient:"<< mpc_solver.gradient<<std::endl;
-//   } else {
-//       solver.updateHessianMatrix(mpc_solver.hessian);
-//       solver.updateGradient(mpc_solver.gradient);
-//       solver.updateLowerBound(mpc_solver.lb);
-//       solver.updateUpperBound(mpc_solver.ub);
-//   }
-//   //cout<<"mpc_qp calcluation"<<endl;
-//   //auto t5 = std::chrono::high_resolution_clock::now();
-//   // solver.solve();
-//   solver.solveProblem();
-//   //auto t6 = std::chrono::high_resolution_clock::now();
-//   Eigen::VectorXd solution = solver.getSolution();
-//   for (int i = 0; i < NUM_LEG; ++i) {
-//       if (!isnan(solution.segment<3>(i * 3).norm()))
-//           foot_forces_grf.block<3, 1>(3*i,0) = state.root_rot_mat.transpose() * solution.segment<3>(i * 3);
-//           //foot_forces_grf.block<3, 1>(3*i,0) = solution.segment<3>(i * 3);
-//   }  
-//   //cout<<"mpc_qp calcluation"<<endl;
-//   return foot_forces_grf;
-// }
-
-
-
-
 
 void control_gait_sub_operation(const sensor_msgs::JointState::ConstPtr &msg)
 {
@@ -812,39 +627,11 @@ int main(int argc, char *argv[])
             support_position_mpc_ref = tvo_nlp_planner.support_position_mpc_ref;
             right_support = (int) nlp_gait_result(99,0); ///// should be updated
 
-            // if(right_support==1) ////relative state estimation
-            // {
-            //   for (int ji = 0; ji < 10; ji++)
-            //   {
-            //     com_nlp_ref(0,ji) -= rfoot_mpc_ref(0,0);
-            //     com_nlp_ref(1,ji) -= rfoot_mpc_ref(1,0);
-            //   }
-            // }
-            // else
-            // {
-            //   for (int ji = 0; ji < 10; ji++)
-            //   {
-            //     com_nlp_ref(0,ji) -= lfoot_mpc_ref(0,0);
-            //     com_nlp_ref(1,ji) -= lfoot_mpc_ref(1,0);
-            //   }
-            // }
-
             // cout<<"right_support:"<<right_support<<endl;
             /// desired average linear velocity;
             state.root_lin_vel_d[0] = (Nrtfoorpr_gen(2,0) - Nrtfoorpr_gen(1,0))/Nrtfoorpr_gen(8,0);
             state.root_lin_vel_d[1] = (Nrtfoorpr_gen(4,0) - Nrtfoorpr_gen(3,0))/Nrtfoorpr_gen(8,0);  
             state.root_lin_vel_d[2] = 0;
-            //// note that the reference CoM trajectory should be generated by motion planner/////
-            // com_mpc_ref.col(0) = nlp_gait_result.block<3,1>(0, 0);
-            // for (int j = 1; j < 10; j++)
-            // {
-            //     comv_mpc_ref(0,j) = state.root_lin_vel_d[0];
-            //     comv_mpc_ref(1,j) = state.root_lin_vel_d[1];
-            //     comv_mpc_ref(2,j) = state.root_lin_vel_d[2];
-            //     com_mpc_ref(0,j) = com_mpc_ref(0,j-1) + comv_mpc_ref(0,j-1) * dt_mpc;
-            //     com_mpc_ref(1,j) = com_mpc_ref(1,j-1) + comv_mpc_ref(1,j-1) * dt_mpc; 
-            //     com_mpc_ref(2,j) = com_mpc_ref(2,j-1) + comv_mpc_ref(2,j-1) * dt_mpc;                  
-            // }
             com_mpc_ref = com_nlp_ref;
             comv_mpc_ref = comv_nlp_ref;
 
@@ -880,38 +667,44 @@ int main(int argc, char *argv[])
             }
             else
             {
-              //// update state, using the real state: notice that the relative com motion to the support center is used to here;              
-              state.root_pos[0] = state_feedback[1];
-              state.root_pos[1] = state_feedback[4];
-              state.root_pos[2] = state_feedback[7];
-              state.root_lin_vel[0] = state_feedback[2];
-              state.root_lin_vel[1] = state_feedback[5];
-              state.root_lin_vel[2] = state_feedback[8];
-              state.root_euler = state_feedback.block<3,1>(10,0);
-              state.root_ang_vel = state_feedback.block<3,1>(13,0);
+              //// update state, using the weigaht state: notice that the relative com motion to the support center is used to here;              
+              state_alpha= 0.8;
+
+              state.root_pos[0] = ((1 - state_alpha)*state_feedback[1] + (state_alpha)*com_nlp_ref(0,0));
+              state.root_pos[1] = ((1 - state_alpha)*state_feedback[4] + (state_alpha)*com_nlp_ref(1,0));
+              state.root_pos[2] = ((1 - state_alpha)*state_feedback[7] + (state_alpha)*com_nlp_ref(2,0));
+              state.root_lin_vel[0] = ((1 - state_alpha)*state_feedback[2] + (state_alpha)*comv_nlp_ref(0,0));
+              state.root_lin_vel[1] = ((1 - state_alpha)*state_feedback[5] + (state_alpha)*comv_nlp_ref(1,0));
+              state.root_lin_vel[2] = ((1 - state_alpha)*state_feedback[8] + (state_alpha)*comv_nlp_ref(2,0));
+              state.root_euler = (1 - state_alpha)*state_feedback.block<3,1>(10,0);
+              state.root_euler[2] += (state_alpha*yaw_mpc_ref(0,0));
+
+              state.root_ang_vel = (1 - state_alpha)*state_feedback.block<3,1>(13,0);
+              state.root_ang_vel[2] += (state_alpha*yaw_mpc_ref(1,0));
 
               state.root_lin_vel_d_world = state.root_lin_vel_d;
 
-              // if(right_support==1) ////relative state estimation
-              // {
-              //   state.root_pos[0] -= Rfoot_location_feedback(0);
-              //   state.root_pos[1] -= Rfoot_location_feedback(1);
-              //   state.root_pos[2] -= Rfoot_location_feedback(2);
-
-              // }
-              // else
-              // {
-              //   state.root_pos[0] -= Lfoot_location_feedback(0);
-              //   state.root_pos[1] -= Lfoot_location_feedback(1);
-              //   state.root_pos[2] -= Lfoot_location_feedback(2);                
-              // }              
-              
-
               ////current leg position to current current com /////
-              foot_poses.row(0) = (state_feedback.block<3,1>(37,0) - state.root_pos).transpose(); //FRtoCoM
-              foot_poses.row(1) = (state_feedback.block<3,1>(40,0) - state.root_pos).transpose(); //FLtoCoM 
-              foot_poses.row(2) = (state_feedback.block<3,1>(43,0) - state.root_pos).transpose(); //RRtoCoM 
-              foot_poses.row(3) = (state_feedback.block<3,1>(46,0) - state.root_pos).transpose(); //RLtoCoM 
+              Eigen::Vector3d foot_position_to_com_ref;
+              //FR2COM
+              foot_position_to_com_ref = support_position_mpc_ref.block<3,1>(12*(0),0) + lfoot_mpc_ref.block<3,1>(0,0) - com_mpc_ref.block<3,1>(0,0) - body_p_Homing_Retarget;
+              foot_poses.row(0) = (state_alpha)*foot_position_to_com_ref.transpose();
+
+              foot_poses.row(0) += (1 - state_alpha)*(state_feedback.block<3,1>(37,0) - state.root_pos).transpose(); //FRtoCoM
+              ///FL2COM
+              foot_position_to_com_ref = support_position_mpc_ref.block<3,1>(12*(0)+3,0) + rfoot_mpc_ref.block<3,1>(0,0) - com_mpc_ref.block<3,1>(0,0) - body_p_Homing_Retarget;
+              foot_poses.row(1)  = (state_alpha)*foot_position_to_com_ref.transpose();
+             
+              foot_poses.row(1) += (1 - state_alpha)*(state_feedback.block<3,1>(40,0) - state.root_pos).transpose(); //FLtoCoM 
+              ///RR2COM
+              foot_position_to_com_ref = support_position_mpc_ref.block<3,1>(12*(0)+6,0) + rfoot_mpc_ref.block<3,1>(0,0) - com_mpc_ref.block<3,1>(0,0) - body_p_Homing_Retarget;
+              foot_poses.row(2)  = (state_alpha)*foot_position_to_com_ref.transpose();
+              
+              foot_poses.row(2) += (1 - state_alpha)*(state_feedback.block<3,1>(43,0) - state.root_pos).transpose(); //RRtoCoM 
+              ///RL2COM
+              foot_position_to_com_ref = support_position_mpc_ref.block<3,1>(12*(0)+9,0) + lfoot_mpc_ref.block<3,1>(0,0) - com_mpc_ref.block<3,1>(0,0) - body_p_Homing_Retarget;
+              foot_poses.row(3)  = (state_alpha)*foot_position_to_com_ref.transpose();                
+              foot_poses.row(3) += (1 - state_alpha)*(state_feedback.block<3,1>(46,0) - state.root_pos).transpose(); //RLtoCoM 
                  
             }
             // --------------------- GRF COMPUTATION ----------------------------------
@@ -926,12 +719,6 @@ int main(int argc, char *argv[])
             //auto t0_qp = std::chrono::high_resolution_clock::now();
             mpc_solve(force_leg);
             ///// std::cout << force_leg(2,0) + force_leg(5,0) + force_leg(8,0) + force_leg(11,0) << std::endl;
-
-
-            // //// MIT convex MPC
-            // force_leg = force_mpc(state, com_mpc_ref, comv_mpc_ref, support_position_mpc_ref, yaw_mpc_ref, rfoot_mpc_ref, lfoot_mpc_ref, right_support);
-
-
         }
 
  

@@ -62,10 +62,10 @@ public:
         //         0.0; ///// theta_r, theta_p, theta_y, x, y, z,omega_r, omega_p, omega_y, vel_x, vel_y, vel_z, gravity;
 
         //// tstep = 0.25
-        q_weights << 1000.0, 1000.0, 10000.0,
-                1000.0, 1000.0, 10000.0,
-                100.0, 100.0, 5000.0,
-                5000.0, 5000.0, 5000.0,
+        q_weights << 1000.0, 1000.0, 20000.0,
+                100.0, 100.0, 2000.0,
+                100.0, 100.0, 2000.0,
+                1000.0, 1000.0, 2000.0,
                 0.0; ///// theta_r, theta_p, theta_y, x, y, z,omega_r, omega_p, omega_y, vel_x, vel_y, vel_z, gravity;
 
 

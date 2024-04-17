@@ -131,6 +131,7 @@ set(NLP_DIRS ${SRC_PATH_NLP}/NLP)
 add_subdirectory(${SRC_PATH_NLP}/hardware_jump/c)
 include_directories(${cpg_include})
 
+
 FILE(GLOB SOURCES
 	${RTControl_DIRS}/MpcRTControlClass.cpp
 	${NLP_DIRS}/MPCClass.cpp
@@ -138,8 +139,8 @@ FILE(GLOB SOURCES
         ${SRC_PATH}/QP/QPBaseClass.cpp
         ${SRC_PATH}/utils/EiQuadProg/EiQuadProg.cpp
         ${SRC_PATH}/utils/Utils.cpp
-        # ${Torquempc_DIRS}/ConvexMpc.cpp    
-        ${cpg_head} ${cpg_src}    
+        # ${Torquempc_DIRS}/ConvexMpc.cpp  
+        ${cpg_head} ${cpg_src}          
 )
 add_executable(mosek_nlp_kmp_node ${SRC_PATH_NLP}/gait_nlp_kmp.cpp
                 ${SOURCES}
@@ -164,7 +165,7 @@ add_dependencies(mosek_nlp_kmp_node
 # include_directories(/usr/local/include/osqp)
 # find_package(OsqpEigen REQUIRED)
 
-# # # Declare a cpp executable
+# # Declare a cpp executable
 
 # add_executable(test_rotation ${SRC_PATH_lowlevel_MPC}/test/test_rotation.cpp
 #         ${SRC_PATH_lowlevel_MPC}/utils/Utils.cpp
@@ -176,12 +177,12 @@ add_dependencies(mosek_nlp_kmp_node
 #         ${SRC_PATH_lowlevel_MPC}/utils/Utils.h
 #         )
 
-# # add_executable(test_mpc ${SRC_PATH_lowlevel_MPC}/test/test_mpc.cpp)
-# # target_link_libraries(test_mpc
-# #         go1_lib
-# #         ${catkin_LIBRARIES}
-# #         OsqpEigen::OsqpEigen
-# #         )
+# add_executable(test_mpc ${SRC_PATH_lowlevel_MPC}/test/test_mpc.cpp)
+# target_link_libraries(test_mpc
+#         go1_lib
+#         ${catkin_LIBRARIES}
+#         OsqpEigen::OsqpEigen
+#         )
 
 
 ##### python node ####

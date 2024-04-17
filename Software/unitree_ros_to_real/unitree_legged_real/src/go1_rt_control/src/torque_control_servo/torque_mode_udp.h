@@ -165,7 +165,7 @@ class Quadruped{
     double torq_kp_hip, torq_kd_hip, torq_ki_hip;
     Eigen::Matrix<double, torque_err_row,12> torque_err;
     Eigen::Matrix<double, 12,1>  torque_err_intergration;
-    Eigen::Matrix<double, 12,1> Torque_ff_spring,Torque_ff_GRF,Torque_ff_GRF_opt; 
+    Eigen::Matrix<double, 12,1> Torque_ff_spring,Torque_ff_GRF,Torque_ff_GRF_opt,Torque_ff_GRF_standing,Torque_ff_GRF_error, Torque_ff_GRF_error_inter; 
 
     /////// spring constant here
     double k_spring_calf,k_spring_thigh,k_spring_hip;
@@ -232,7 +232,7 @@ class Quadruped{
     Eigen::Vector3d root_euler;
     Eigen::Vector3d root_euler_offset;
     Eigen::Vector3d root_euler_angular_velocity_offset;
-    Eigen::Matrix3d root_rot_mat;
+    Eigen::Matrix3d root_rot_mat, root_rot_mat_ref;
     Eigen::Matrix3d root_rot_mat_z;
     Eigen::Vector3d root_lin_vel;
     Eigen::Vector3d root_ang_vel;
@@ -244,6 +244,7 @@ class Quadruped{
 
     double ratex,rate,rate_stand_up;
     Eigen::Matrix<double,3,1>  q_ini;
+    double initial_number =2.5;
 
 
     int stand_count,stand_up_count,dynamic_count;
@@ -555,7 +556,7 @@ class Quadruped{
     double fz_load_ratio;
     double swing_leg_test;
     double switch_support;
-    double using_rotz;
+    double using_real_rotz;
     double using_ros_time;
     double judge_early_contact;
     double judge_later_contact;

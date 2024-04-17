@@ -295,19 +295,19 @@ void Dynamiccclass::force_opt(Eigen::Matrix<double, 3,1> base_p,
     A.block<3,3>(0,6) = A_unit;
     A.block<3,3>(0,9) = A_unit;
 
-    Eigen::Matrix<double, 3,1> com_fr = base_p - FR_p;
+    Eigen::Matrix<double, 3,1> com_fr = -base_p + FR_p;
     Eigen::Matrix3d w_hat = skew_hat(com_fr);
     A.block<3,3>(3,0) = w_hat;
 
-    Eigen::Matrix<double, 3,1> com_fl = base_p - FL_p;
+    Eigen::Matrix<double, 3,1> com_fl = -base_p + FL_p;
     w_hat = skew_hat(com_fl);
     A.block<3,3>(3,3) = w_hat;
 
-    Eigen::Matrix<double, 3,1> com_rr = base_p - RR_p;
+    Eigen::Matrix<double, 3,1> com_rr = -base_p + RR_p;
     w_hat = skew_hat(com_rr);
     A.block<3,3>(3,6) = w_hat;
 
-    Eigen::Matrix<double, 3,1> com_rl = base_p - RL_p;
+    Eigen::Matrix<double, 3,1> com_rl = -base_p + RL_p;
     w_hat = skew_hat(com_rl);
     A.block<3,3>(3,9) = w_hat;
 

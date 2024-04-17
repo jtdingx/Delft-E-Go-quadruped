@@ -909,7 +909,7 @@ void Quadruped::config_set()
     debug_mode= config["debug_mode1"].as<double>();
     swing_leg_test= config["test_leg"].as<double>();  
     switch_support= config["switch_support1"].as<double>();   
-    using_rotz =   config["using_rotz"].as<double>();    
+    using_real_rotz =   config["using_real_rotz"].as<double>();    
     using_ros_time = config["using_ros_time"].as<double>();  
     judge_early_contact = config["judge_early_contact"].as<double>();
     judge_later_contact = config["judge_later_contact"].as<double>();   
@@ -1166,7 +1166,8 @@ Quadruped::Quadruped(uint8_t level): safe(LeggedType::Go1), udp(level){
     root_euler.setZero();
     root_euler_offset.setZero();
     root_euler_angular_velocity_offset.setZero();
-    root_rot_mat.setZero();
+    root_rot_mat.setIdentity();
+    root_rot_mat_ref.setIdentity();
     root_rot_mat_z.setZero();
     root_lin_vel.setZero();
     root_ang_vel.setZero();
@@ -2053,13 +2054,7 @@ void Quadruped::RobotControl()
                             cout<<"body_r_Homing"<<body_r_Homing<<endl;
                         }
                         right_support = 2; 
-                        // // ////========= key board control for homing posing modulation ========= ///////////////////
-                        // body_p_des[0] = body_p_Homing[0] + base_offset_x;
-                        // body_p_des[1] = body_p_Homing[1] + base_offset_y;
-                        // body_p_des[2] = body_p_Homing[2] + base_offset_z;
-                        // body_r_des[0] = body_r_Homing[0] + base_offset_roll;
-                        // body_r_des[1] = body_r_Homing[1] + base_offset_pitch;
-                        // body_r_des[2] = body_r_Homing[2] + base_offset_yaw; 
+
 
                         body_p_des_old_ini = body_p_des;
 
@@ -2067,24 +2062,6 @@ void Quadruped::RobotControl()
                         /////////////////=============== base status control ===================/////////////////////
                         // ////// body pose feedback
                         base_pos_fb_controler();
-                        // ratex = std::min(pow(stand_up_count/500.0,2),1.0);
-                        // // ratex = std::min(ratex,1);
-                        // if(ratex<=1)
-                        // {
-                        //     w_pos_m_filter[0] *= ratex;
-                        //     w_pos_m_filter[1] *= ratex;
-                        //     w_pos_m_filter[2] *= ratex;
-                        //     w_rpy_m_filter[0] *= ratex;
-                        //     w_rpy_m_filter[1] *= ratex;
-                        //     w_rpy_m_filter[2] *= ratex;
-                        // }    
-                        // body_p_des[0] +=  w_pos_m_filter[0];
-                        // body_p_des[1] +=  w_pos_m_filter[1];
-                        // body_p_des[2] +=  w_pos_m_filter[2];
-                        // body_r_des[0] +=  w_rpy_m_filter[0];
-                        // body_r_des[1] +=  w_rpy_m_filter[1];
-                        // body_r_des[2] +=  w_rpy_m_filter[2];
-
                         if (stand_up_count>1)
                         {
                             comv_des[0] = (body_p_des[0] - com_des_pre[0]) /dtx;
@@ -2143,6 +2120,8 @@ void Quadruped::RobotControl()
                         FL_swing = false;
                         RR_swing = false;
                         RL_swing = false; 
+
+                        Torque_ff_GRF_standing = Torque_ff_GRF;
                         
                         //// only for test
                         Legs_torque = Torque_ff_GRF;
@@ -2301,7 +2280,7 @@ void Quadruped::RobotControl()
                                 RL_GRF = Grf_sub_filter.block<3,1>(9,0);                           
                                 
                                 
-                                if (dynamic_count * dtx >= 3.3*tstep)
+                                if (dynamic_count * dtx >= initial_number*tstep)
                                 {
                                     switch (gait_mode)
                                     {
@@ -2426,21 +2405,12 @@ void Quadruped::RobotControl()
                             ////=========  ///////////////////////////
                             ////// body pose feedback!!! set swing_flag according to the reference
                             base_pos_fb_controler();          
-                            // body_p_des[0] +=  w_pos_m_filter[0];
-                            // body_p_des[1] +=  w_pos_m_filter[1];
-                            // body_p_des[2] +=  w_pos_m_filter[2];
-                            // body_r_des[0] +=  w_rpy_m_filter[0];
-                            // body_r_des[1] +=  w_rpy_m_filter[1];
-                            // body_r_des[2] +=  w_rpy_m_filter[2];
-
                             comv_des[0] = (body_p_des[0] - com_des_pre[0]) /dtx;
                             comv_des[1] = (body_p_des[1] - com_des_pre[1]) /dtx;
                             comv_des[2] = (body_p_des[2] - com_des_pre[2]) /dtx;
                             thetav_des[0] = (body_r_des[0] - theta_des_pre[0]) /dtx;
                             thetav_des[1] = (body_r_des[1] - theta_des_pre[1]) /dtx;
                             thetav_des[2] = (body_r_des[2] - theta_des_pre[2]) /dtx;                           
-
-
 
                             foot_earlier_contact_flag.setZero();  
                             //////////////judge if earlier contact
@@ -2712,11 +2682,29 @@ void Quadruped::RobotControl()
                             Dynam.force_opt(body_p_des,FR_foot_des, FL_foot_des, RR_foot_des, RL_foot_des,
                                             F_sum, gait_mode, right_support, y_offset,foot_contact_flag);
 
+
+                            root_rot_mat_ref =  Eigen::AngleAxisd(body_r_des(2,0), Eigen::Vector3d::UnitZ())
+                                            *Eigen::AngleAxisd(body_r_des(1,0), Eigen::Vector3d::UnitY())
+                                            *Eigen::AngleAxisd(body_r_des(0,0), Eigen::Vector3d::UnitX());
                             double alpha = 0.2;
-                            FR_GRF_opt = (alpha * root_rot_mat.transpose() *Dynam.grf_opt.block<3,1>(0,0)) + (1-alpha)  *FR_GRF;
-                            FL_GRF_opt = (alpha * root_rot_mat.transpose() *Dynam.grf_opt.block<3,1>(3,0)) + (1-alpha)  *FL_GRF;
-                            RR_GRF_opt = (alpha * root_rot_mat.transpose() *Dynam.grf_opt.block<3,1>(6,0)) + (1-alpha)  *RR_GRF;
-                            RL_GRF_opt = (alpha * root_rot_mat.transpose() *Dynam.grf_opt.block<3,1>(9,0)) + (1-alpha)  *RL_GRF; 
+                            double alpha_inter = 0;
+                            alpha_inter = std::max(std::min(((dynamic_count * dtx - initial_number*tstep) / (tstep)),1.0),0.0);
+                            alpha *= alpha_inter;
+                            if(using_real_rotz>0.5)
+                            {
+                                FR_GRF_opt = (alpha * root_rot_mat.transpose() *Dynam.grf_opt.block<3,1>(0,0)) + (1-alpha) * root_rot_mat.transpose()*FR_GRF;
+                                FL_GRF_opt = (alpha * root_rot_mat.transpose() *Dynam.grf_opt.block<3,1>(3,0)) + (1-alpha) * root_rot_mat.transpose()*FL_GRF;
+                                RR_GRF_opt = (alpha * root_rot_mat.transpose() *Dynam.grf_opt.block<3,1>(6,0)) + (1-alpha) * root_rot_mat.transpose()*RR_GRF;
+                                RL_GRF_opt = (alpha * root_rot_mat.transpose() *Dynam.grf_opt.block<3,1>(9,0)) + (1-alpha) * root_rot_mat.transpose()*RL_GRF; 
+                            }
+                            else
+                            {
+                                FR_GRF_opt = (alpha * root_rot_mat_ref.transpose() *Dynam.grf_opt.block<3,1>(0,0)) + (1-alpha) * root_rot_mat_ref.transpose()*FR_GRF;
+                                FL_GRF_opt = (alpha * root_rot_mat_ref.transpose() *Dynam.grf_opt.block<3,1>(3,0)) + (1-alpha) * root_rot_mat_ref.transpose()*FL_GRF;
+                                RR_GRF_opt = (alpha * root_rot_mat_ref.transpose() *Dynam.grf_opt.block<3,1>(6,0)) + (1-alpha) * root_rot_mat_ref.transpose()*RR_GRF;
+                                RL_GRF_opt = (alpha * root_rot_mat_ref.transpose() *Dynam.grf_opt.block<3,1>(9,0)) + (1-alpha) * root_rot_mat_ref.transpose()*RL_GRF;                                 
+                            }
+
                         }        
                         
                         ////// smoothing the joint trajectory when starting moving
@@ -2732,17 +2720,15 @@ void Quadruped::RobotControl()
                         }
                         else
                         {
-                            if(dynamic_count * dtx >= 2.4*tstep)
+                            if(dynamic_count * dtx >= initial_number*tstep)
                             {
-                                ratex = std::min(pow((dynamic_count * dtx- 2.4*tstep)/tstep,2),1.0);
+                                ratex = std::min(pow((dynamic_count * dtx- initial_number*tstep)/(2*tstep),2),1.0);
                                 for(int j=0; j<12;j++)
                                 {
                                     qDes[j] = jointLinearInterpolation(sin_mid_q[j], qDes[j], ratex, 0);
                                 }
                             }
                         }
-
-
 
                         if(using_real_jaco>0.5)
                         {
@@ -2758,6 +2744,45 @@ void Quadruped::RobotControl()
                             Torque_ff_GRF.block<3,1>(6,0) = - RR_Jaco.transpose() *  RR_GRF_opt;
                             Torque_ff_GRF.block<3,1>(9,0) = - RL_Jaco.transpose() *  RL_GRF_opt; 
                         }
+
+                        for(int j=0; j<12;j++)
+                        {
+                            if(j % 3 == 0)
+                            {
+                                Torque_ff_GRF(j,0) = std::min(std::max(Torque_ff_GRF(j,0),-15.0),15.0);
+                            }
+                            if(j % 3 == 1)
+                            {
+                                Torque_ff_GRF(j,0) = std::min(std::max(Torque_ff_GRF(j,0),-23.0),23.0);
+                            }
+                            if(j % 3 == 2)
+                            {
+                                Torque_ff_GRF(j,0) = std::min(std::max(Torque_ff_GRF(j,0),-30.0),30.0);
+                            }
+                        }
+                        
+                        rate_stand_up = std::min(pow(dynamic_count *dtx /(initial_number*tstep),2),1.0); 
+                        for(int j=0; j<12;j++)
+                        {
+                            if(rate_stand_up<1.0)
+                            {   
+                                cout<<rate_stand_up<<endl;
+                                cout<<Torque_ff_GRF_standing[0]<<endl;
+
+                                Torque_ff_GRF_error = Torque_ff_GRF - Torque_ff_GRF_standing;
+                                cout<<Torque_ff_GRF_error[0]<<endl;
+                                Torque_ff_GRF_error_inter[j] =  jointLinearInterpolation(0, Torque_ff_GRF_error(j,0), rate_stand_up, 0);
+                                Torque_ff_GRF[j] = Torque_ff_GRF_standing[j] + Torque_ff_GRF_error_inter[j];
+                            }
+                            // else
+                            // {
+                            //     Torque_ff_GRF[j] = jointLinearInterpolation(0, Torque_ff_GRF(j,0), rate_stand_up, 0);
+                            // }
+                            
+                        }
+
+
+
 
                         break;
                     }
@@ -2893,7 +2918,15 @@ void Quadruped::RobotControl()
                             torq_kp_thigh = 7 * thigh_kp_scale;
                             torq_kd_thigh = 0.3 * thigh_kd_scale;
                             torq_ki_thigh = 0.01*1; 
-                            k_spring_thigh = FR_k_spring_thigh;
+                            if(j>6)/// front legs
+                            {
+                               k_spring_thigh = FR_k_spring_thigh;
+                            }
+                            else /// real legs
+                            {
+                               k_spring_thigh = RR_k_spring_thigh;
+                            }
+                            
                             k_p_rest_thigh = sin_mid_q[j];  
                             
                             //// fb control
@@ -3525,7 +3558,7 @@ int main(int argc, char *argv[]){
     std::cin.ignore();
     
     Quadruped robot(LOWLEVEL);
-    double dt = 0.002; // Change the operational period (in sec).
+    double dt = 0.001; // Change the operational period (in sec).
     // InitEnvironment();
     LoopFunc loop_control("control_loop", dt,    boost::bind(&Quadruped::RobotControl, &robot));
     LoopFunc loop_udpSend("udp_send",     dt, 3, boost::bind(&Quadruped::UDPSend,      &robot));

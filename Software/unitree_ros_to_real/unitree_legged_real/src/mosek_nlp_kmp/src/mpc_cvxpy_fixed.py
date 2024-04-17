@@ -114,19 +114,16 @@ for i in range(N):
 
 ##### N= 6~10;
 R = cp.Parameter((m,m),name="R")
-R.value = 0.1*np.array([1.0,1.0,1.0,1.0,1.0,1.0])*np.eye(m) 
+R.value = 100*np.array([1.0,1.0,1.0,1.0,1.0,1.0])*np.eye(m) 
 
 R_grf = cp.Parameter((n,n),name="R_grf")
-R_grf.value = 0.01*np.array([1.0,1.0,2,1.0,1.0,2,1.0,1.0,2,1.0,1.0,2])*np.eye(n) 
+R_grf.value = 0.001*np.array([5.0,5.0,2,5.0,5.0,2,5.0,5.0,2,5.0,5.0,2])*np.eye(n) 
 
-Q = 1*np.array([250,250,300,200,200,200,10,10,10,10,10,10])*np.eye(n) 
+Q = 1*np.array([20,20,10,20,20,10,10,10,100,10,10,100])*np.eye(n) 
 
 ###
-cost = cp.sum_squares(Q@(X[:,:N]-X_ref))+ cp.sum_squares(R@U) + cp.sum_squares(R_grf@F)
+cost = cp.sum_squares(Q@(X[:,:N]-X_ref))+ cp.sum_squares(R@U) #+ cp.sum_squares(R_grf@F)
 
 prob = cp.Problem(cp.Minimize(cost), constr)
-
-# prob.solve()
-# prob.solve()
 
 cpg.generate_code(prob,code_dir='/home/jiatao/Documents/unitree_sdk_hardware_test/go1_remote_control/src/unitree_ros_to_real/unitree_legged_real/src/mosek_nlp_kmp/src/hardware_jump',solver='OSQP')#,solver='ECOS')
