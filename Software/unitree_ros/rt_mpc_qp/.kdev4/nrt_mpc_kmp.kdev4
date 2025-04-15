@@ -1,0 +1,21 @@
+[Buildset]
+BuildItems=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x01\x00\x00\x00\x0b\x00\x00\x00\x00\x01\x00\x00\x00\x16\x00n\x00r\x00t\x00_\x00m\x00p\x00c\x00_\x00k\x00m\x00p)
+
+[CMake]
+Build Directory Count=1
+Current Build Directory Index=0
+ProjectRootRelative=
+
+[CMake][CMake Build Directory 0]
+Build Directory Path=file:///home/jiatao/ubtech_robots/webots_ws/build/nrt_mpc_kmp/xx
+Build Type=Debug
+CMake Binary=file:///usr/bin/cmake
+Environment Profile=
+Extra Arguments=
+Install Directory=
+Runtime=Host System
+
+[Defines And Includes][Compiler]
+Name=GCC
+Path=gcc
+Type=GCC

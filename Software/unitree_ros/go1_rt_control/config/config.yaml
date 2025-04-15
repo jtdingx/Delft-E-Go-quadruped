@@ -1,0 +1,400 @@
+# #################### the below is for walking without spring####
+# ####for EKF estimator
+# PROCESS_NOISE_PIMU: 0.001
+# PROCESS_NOISE_VIMU: 0.001
+# PROCESS_NOISE_PFOOT: 0.001
+# SENSOR_NOISE_PIMU_REL_FOOT: 0.00001
+# SENSOR_NOISE_VIMU_REL_FOOT: 0.10
+# SENSOR_NOISE_ZFOOT: 0.00001
+# fz_limit_ekf: 200
+# using_ros_time: 0  ##### using real dt for ekf
+# using_ekf: 0       #### ekf as state estimator 
+
+
+# ##### joint tracking controller
+# Kp_joint_retarget0: 60
+# Kp_joint_retarget1: 30
+# Kp_joint_retarget2: 30
+# Kp_joint_retarget3: 60
+# Kp_joint_retarget4: 30
+# Kp_joint_retarget5: 30
+# Kp_joint_retarget6: 60
+# Kp_joint_retarget7: 60
+# Kp_joint_retarget8: 60
+# Kp_joint_retarget9: 60
+# Kp_joint_retarget10: 60
+# Kp_joint_retarget11: 60
+
+# Kd_joint_retarget0: 1
+# Kd_joint_retarget1: 1
+# Kd_joint_retarget2: 1
+# Kd_joint_retarget3: 1
+# Kd_joint_retarget4: 1
+# Kd_joint_retarget5: 1
+# Kd_joint_retarget6: 1
+# Kd_joint_retarget7: 1.25
+# Kd_joint_retarget8: 1.25
+# Kd_joint_retarget9: 1
+# Kd_joint_retarget10: 1.25
+# Kd_joint_retarget11: 1.25
+
+# ########## CoM acceleration: for GRF compensation ###
+# # kpp0: 60
+# # kpp1: 80
+# # kpp2: 60
+# # kdp0: 8 
+# # kdp1: 8 
+# # kdp2: 8
+
+# # kpw0: 110 
+# # kpw1: 110 
+# # kpw2: 110 
+# # kdw0: 5 
+# # kdw1: 5 
+# # kdw2: 5 
+# # kpw0: 100 
+# # kpw1: 100 
+# # kpw2: 120 
+# # kdw0: 1 
+# # kdw1: 1
+# # kdw2: 1 
+
+# # kpp0: 10
+# # kpp1: 10
+# # kpp2: 20
+# # kdp0: 1
+# # kdp1: 1
+# # kdp2: 1
+
+# # kpp0: 20
+# # kpp1: 20
+# # kpp2: 20
+# # kdp0: 0
+# # kdp1: 0
+# # kdp2: 0
+
+
+# # kpw0: 350 
+# # kpw1: 350
+# # kpw2: 10
+# # kdw0: 10 
+# # kdw1: 10
+# # kdw2: 30 
+
+# kpp0: 20
+# kpp1: 20
+# kpp2: 20
+# kdp0: 1
+# kdp1: 1
+# kdp2: 1
+
+
+# kpw0: 100
+# kpw1: 100
+# kpw2: 20
+# kdw0: 5 
+# kdw1: 5
+# kdw2: 1 
+
+
+# ###### swing leg impedance control
+# tracking_global_foot: 0
+# # swingkp0: 100 
+# # swingkp1: 100 
+# # swingkp2: 150 
+# # swingkd0: 10 
+# # swingkd1: 10 
+# # swingkd2: 15 
+
+# # swingkp0: 100 
+# # swingkp1: 100 
+# # swingkp2: 100 
+# # swingkd0: 20 
+# # swingkd1: 20
+# # swingkd2: 20
+
+# # swingkp0: 10
+# # swingkp1: 10 
+# # swingkp2: 10 
+# # swingkd0: 1
+# # swingkd1: 1
+# # swingkd2: 1
+
+
+# swingkp0: 50
+# swingkp1: 50 
+# swingkp2: 50 
+# swingkd0: 1
+# swingkd1: 1
+# swingkd2: 1
+
+
+# ##### body pose homing pose ####
+# body_p_Homing_Retarget0: 0.02
+# body_p_Homing_Retarget1: -0.000
+# body_p_Homing_Retarget2: 0.28
+
+# body_r_Homing_Retarget0: 0
+# body_r_Homing_Retarget1: 0.01  ####positive cause backwards motion; negetive cause forwards
+# body_r_Homing_Retarget2: 0
+
+
+# ### spring_k: should be estimated by the full body dynamics
+# FR_k_spring_hip: 7
+# FL_k_spring_hip: 7
+# RR_k_spring_hip: 7
+# RL_k_spring_hip: 7
+# FR_k_spring_thigh: 15
+# FL_k_spring_thigh: 15
+# RR_k_spring_thigh: 19
+# RL_k_spring_thigh: 16
+# FR_k_spring_calf: 6
+# FL_k_spring_calf: 6
+# RR_k_spring_calf: 6
+# RL_k_spring_calf: 6
+
+# ### body pose&rpy tracking: derivative gains should be reduced to make it smoother 
+# w_pos_m_kp0: 0.00
+# w_pos_m_kp1: 0.00
+# w_pos_m_kp2: 0.0
+# w_pos_m_kd0: 0.0000
+# w_pos_m_kd1: 0.0000
+# w_pos_m_kd2: 0.0000
+
+# w_rpy_m_kp0: 0.0
+# w_rpy_m_kp1: 0.0
+# w_rpy_m_kp2: 0.0
+# w_rpy_m_kd0: 0.00000
+# w_rpy_m_kd1: 0.00000
+# w_rpy_m_kd2: 0.0000
+
+# com_pos_max2: 0.01
+# com_pos_min2: -0.01
+# com_rpy_max2: 0.005
+# com_rpy_min2: -0.005
+
+# ###### controller mode
+# uisng_current_jaco1: 1  ####using estimated Jacobian
+# using_ff1: 1            ####using feedfoward torque
+# enable_spring: 1        #### engage springs
+# global_com_feedback1: 0 ####tracking global CoM /// should track the global com when walking ///// 
+# using_grf_node1: 0      ####using other Grf node
+# debug_mode1: 0  
+# switch_support1: 1     #### should be 1 when not using ekf; works when tracking the relative state, i.e, global_com_feedback1 and tracking_global_foot are 0
+# using_rotz: 0
+# judge_early_contact: 0
+# judge_later_contact: 0
+
+# ###time interval for hardware
+# dt_grf1: 0.002
+# dt_rt_loop1: 0.0025
+
+# ###CoM velocity filter
+# fcut_off51: 20 
+# ### grf filter
+# fcutoff_comx41: 50
+# ##### measure fz_force threshold
+# fz_limit1: 200
+
+# ###test_leg_motion: 0; right swing; 1 left swing; 2 double swing
+# test_leg: 0
+
+
+##########the next block########################
+#################### the below is for walking with spring####
+####for EKF estimator
+PROCESS_NOISE_PIMU: 0.001
+PROCESS_NOISE_VIMU: 0.001
+PROCESS_NOISE_PFOOT: 0.001
+SENSOR_NOISE_PIMU_REL_FOOT: 0.00001
+SENSOR_NOISE_VIMU_REL_FOOT: 0.10
+SENSOR_NOISE_ZFOOT: 0.00001
+fz_limit_ekf: 200
+using_ros_time: 0  ##### using real dt for ekf;
+using_ekf: 0       #### ekf as state estimator 
+
+
+##### joint tracking controller
+Kp_joint_retarget0: 60
+Kp_joint_retarget1: 30
+Kp_joint_retarget2: 30
+Kp_joint_retarget3: 60
+Kp_joint_retarget4: 30
+Kp_joint_retarget5: 30
+Kp_joint_retarget6: 60
+Kp_joint_retarget7: 60
+Kp_joint_retarget8: 60
+Kp_joint_retarget9: 60
+Kp_joint_retarget10: 60
+Kp_joint_retarget11: 60
+
+Kd_joint_retarget0: 1
+Kd_joint_retarget1: 1
+Kd_joint_retarget2: 1
+Kd_joint_retarget3: 1
+Kd_joint_retarget4: 1
+Kd_joint_retarget5: 1
+Kd_joint_retarget6: 1
+Kd_joint_retarget7: 1.25
+Kd_joint_retarget8: 1.25
+Kd_joint_retarget9: 1
+Kd_joint_retarget10: 1.25
+Kd_joint_retarget11: 1.25
+
+########## CoM acceleration: for GRF compensation ###
+kpp0: 20
+kpp1: 20
+kpp2: 20
+kdp0: 1
+kdp1: 1
+kdp2: 1
+
+
+kpw0: 100
+kpw1: 100
+kpw2: 20
+kdw0: 5 
+kdw1: 5
+kdw2: 1 
+
+
+###### swing leg impedance control
+tracking_global_foot: 0
+
+
+swingkp0: 100
+swingkp1: 100 
+swingkp2: 100 
+swingkd0: 1
+swingkd1: 1
+swingkd2: 1
+
+
+##### body pose homing pose ####
+body_p_Homing_Retarget0: -0.0
+body_p_Homing_Retarget1: -0.000
+body_p_Homing_Retarget2: 0.3
+
+body_r_Homing_Retarget0: 0
+body_r_Homing_Retarget1: 0.01  ####positive cause backwards motion;;; negetive cause forwards
+body_r_Homing_Retarget2: 0
+
+
+### spring_k: should be estimated by the full body dynamics
+FR_k_spring_hip: 7
+FL_k_spring_hip: 7
+RR_k_spring_hip: 7
+RL_k_spring_hip: 7
+# FR_k_spring_thigh: 15
+# FL_k_spring_thigh: 15
+# RR_k_spring_thigh: 19
+# RL_k_spring_thigh: 19
+# FR_k_spring_calf: 5
+# FL_k_spring_calf: 5
+# RR_k_spring_calf: 5
+# RL_k_spring_calf: 5
+FR_k_spring_thigh: 20
+FL_k_spring_thigh: 20
+RR_k_spring_thigh: 20
+RL_k_spring_thigh: 20
+FR_k_spring_calf: 5
+FL_k_spring_calf: 5
+RR_k_spring_calf: 5
+RL_k_spring_calf: 5
+
+### body pose&rpy tracking: derivative gains should be reduced to make it smoother 
+w_pos_m_kp0: 0.00
+w_pos_m_kp1: 0.00
+w_pos_m_kp2: 0.0
+w_pos_m_kd0: 0.0000
+w_pos_m_kd1: 0.0000
+w_pos_m_kd2: 0.0000
+
+w_rpy_m_kp0: 0.0
+w_rpy_m_kp1: 0.0
+w_rpy_m_kp2: 0.0
+w_rpy_m_kd0: 0.00000
+w_rpy_m_kd1: 0.00000
+w_rpy_m_kd2: 0.0000
+
+com_pos_max2: 0.01
+com_pos_min2: -0.01
+com_rpy_max2: 0.005
+com_rpy_min2: -0.005
+
+###### controller mode
+uisng_current_jaco1: 1  ####using estimated Jacobian
+using_ff1: 1            ####using feedfoward torque
+enable_spring: 1        #### engage springs
+global_com_feedback1: 1 ####tracking global CoM /// should track the global com when walking ///// 
+switch_support1: 1     #### should be 1 when not using ekf; works when tracking the relative state, i.e, global_com_feedback1 and tracking_global_foot are 0
+
+debug_mode1: 0 
+using_rotz: 0
+judge_early_contact: 0
+judge_later_contact: 0
+using_grf_node1: 0      ####using other Grf node
+
+###time interval for hardware
+dt_grf1: 0.002
+dt_rt_loop1: 0.0025 ###real-time loop
+
+#### com filter
+fcut_off11: 3
+fcut_off21: 7
+fcut_off31: 20
+###CoM velocity filter
+fcut_off51: 20 
+### torque command filter
+fcutoff_comx41: 50
+##### measure fz_force threshold
+fz_limit1: 200
+
+###test_leg_motion: 0; right swing; 1 left swing; 2 double swing
+test_leg: 2
+
+#### test_mode:
+test_stepping_in_place: 0 ####step_in_place and stepping forward
+
+##########################===============//////////////////////////////
+##### gait parameters
+dt_slow_mpc: 0.025
+step_length: 0.05
+step_width: 0
+step_height: 0
+foot_clear_height: 0.05
+t_period: 0.25 ###step period
+total_mass: 13
+using_hie_using: 0 ###using the rt_mpc data
+
+### first layer
+_aax:  10000000
+_aay:  1000000
+_aaxv: 5000          
+_aayv: 1000
+_bbx:  500000000       
+_bby:  500000000
+_rr1:  500000000      
+_rr2:  500000000 
+_aax1: 100            
+_aay1: 100
+_bbx1: 1000            
+_bby1: 1000
+_rr11: 10000          
+_rr21: 10000
+
+### feedback
+_lamda_comx: 0.9
+_lamda_comvx: 0.95
+_lamda_comy: 0.95
+_lamda_comvy: 0.99
+
+### second layer
+_Rthetax: 1                          
+_Rthetay: 1       
+_alphathetax: 10                    
+_alphathetay: 10       
+_beltathetax: 5000000                
+_beltathetay: 5000000 
+_gama_zmpx: 1000                     
+_gama_zmpy: 1000 
